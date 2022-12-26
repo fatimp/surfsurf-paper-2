@@ -1,0 +1,6 @@
+scripts/*.dat
+paper.aux
+paper.log
+paper.out
+paper.pdf
+paperNotes.bib
