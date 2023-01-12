@@ -49,10 +49,10 @@ AAA
 \section{Definitions}
 \label{sec:def}
 Let $A$ be a set in Euclidean space $\mathbb{R}^n$. A function
-$\chi_S(\mathbf{x})$ is called an indicator function for the set $A$ and is
+$\chi_A(\mathbf{x})$ is called an indicator function for the set $A$ and is
 defined as follows:
 \begin{equation*}
-  \chi_S(\bm{x}) = \left\{
+  \chi_A(\bm{x}) = \left\{
   \begin{array}{ll}
     1 & \quad \bm{x} \in A \\
     0 & \quad \text{otherwise}
@@ -86,7 +86,7 @@ correlation functions for all possible directions and correlation lengths. It
 consists of two stages: edge detection stage and computation of
 autocorrelation.
 
-We give an image of porous medium in the form of two- or threedimensional bit
+We give an image of porous medium in the form of two- or three-dimensional bit
 array $A$ as the input to our algorithm. In the first stage, we convolve the
 input with high-pass filter to extract edges from the image. We use the
 following filter kernel $H$ \textcolor{red}{Is there notation for 3x3x3
@@ -144,7 +144,7 @@ properties of Fourier transform:
 All in all we get the following algorithm for calculation of $F_{ss}$ function:
 \begin{algorithmic}[1]
   \Procedure{surfsurf}{$A$}
-  \State $A' \gets A*H$
+  \State $A' \gets H*A$
   \Comment{$A'$ becomes an interface of $A$.}
   \State $\hat{A'} \gets F[A']$
   \Comment{Apply DFT to $A'$.}
@@ -195,12 +195,12 @@ two-dimensional sets with smooth boundary.
   \label{fig:Fss-explained}
 \end{figure}
 Let $S$ be some set in $\mathbb{R}^2$ which has a smooth boundary $\Gamma$ in
-the sense that the boundary has a tangent line at every point. Now we introduce
-a function $f_\Gamma(\bm{x}; \Delta)$:
+the sense that the boundary has a tangent line almost at every point. Now we
+introduce a function $f_\Gamma(\bm{x}; \Delta)$:
 \begin{equation*}
   f_\Gamma(\bm{x}; \Delta) = \left\{
   \begin{array}{ll}
-    1/\epsilon & \quad \rho(\bm{x}, \Gamma) < \Delta \\
+    1/\Delta & \quad \rho(\bm{x}, \Gamma) < \Delta \\
     0 & \quad \text{otherwise}
   \end{array}
   \right.
@@ -235,14 +235,14 @@ acute angle between tangent lines. Hence, we get the following equation:
   \sum_{k=1}^N \frac{1}{\sin \phi_k} \label{eq:fss-2d}
 \end{equation}
 It's easy to show that
-$\lim_{\Delta \to 0} f_\Gamma(\bm{x}; \Delta) = |\nabla \chi_S(\bm{x})|$
+$\lim_{\Delta \to 0} f_\Gamma(\bm{x}; \Delta) = |\nabla \chi_A(\bm{x})|$
 and therefore \cref{eq:fss-2d} and \cref{eq:fss} define the same function.
 
 \subsection{Dual numbers and automatic differentiation}
 \label{sec:dual}
 A ring of dual numbers $D$ is a set of pairs of real numbers $(x, y)$ with two
 binary operations: $+$ (addition) and $\cdot$ (multiplication) where
-multiplication work according to the following law:
+multiplication works according to the following law:
 \begin{equation*}
   (x_1, y_1)\cdot(x_2, y_2) = (x_1x_2, x_1y_2 + y_1x_2)
 \end{equation*}
@@ -273,14 +273,15 @@ example, the exponent function is extended as:
 \begin{align*}
   e^{a + b\varepsilon} &= \sum_{k=0}^{\infty}\frac{(a + b\varepsilon)^k}{k!} \\
   &= \sum_{k=0}^{\infty} \frac{a^k + bka^{k-1}\varepsilon}{k!} \\
-  &= \sum_{k=0}^{\infty} \frac{a^k}{k!} + b\varepsilon \sum_{k=1}
+  &= \sum_{k=0}^{\infty} \frac{a^k}{k!} + b\varepsilon \sum_{k=1}^{\infty}
   \frac{a^{k-1}}{(k-1)!} \\
   &= e^a + e^ab\varepsilon
 \end{align*}
 
-Here are some basic rules for working with dual numbers:
+Here are some basic rules for working with dual numbers (some of which we have
+already described):
 \begin{itemize}
-\item $(a + b\varepsilon) + (c + d\varepsilon) = (a + b) + (c + d)\varepsilon$
+\item $(a + b\varepsilon) + (c + d\varepsilon) = (a + c) + (b + d)\varepsilon$
 \item $(a + b\varepsilon) (c + d\varepsilon) = ac + (ad + bc)\varepsilon$
 \item $\frac{a + b\varepsilon}{c + d\varepsilon} = \frac{a}{c} + \frac{bc - ad}{c^2}$
 \item $\exp(a + b\varepsilon) = \exp(a) + b\varepsilon\exp(a)$
@@ -313,7 +314,7 @@ derivative of a multivariate function. For example:
 Here we examine two-dimensional sets with smooth boundary described in
 \cref{sec:fss-2d} more closely. Suppose a set $S$ is defined as
 $S = \left\{ (x, y) \ | \quad f(x, y) \le T \right\}$ where $f(x, y)$ is some function
-differentiable in points where $f(x, y) = T$ and $T$ is some threshold. Let's
+differentiable at points where $f(x, y) = T$ and $T$ is some threshold. Let's
 calculate surface-surface function for this set at a point $(a, b)$. We find all
 intersections between a boundary $\Gamma$ and its translated version by solving a
 system of equations
@@ -337,11 +338,11 @@ the translated boundary as
     \vert_{\bm{x}_i})}{|\nabla f(x,y) \vert_{\bm{x}_i}| |\nabla f(x-a,y-b)
     \vert_{\bm{x}_i}|} \label{eq:angle}
 \end{equation}
-Here $(\cdot, \cdot)$ denotes a scalar product. Gradient of $f$ at the point
-$x_i$ can be found using automatic differentiation and dual numbers described in
-\cref{sec:dual}. Note that acute angle between tangent lines equals to acute
-angle between normals, therefore we can find correlation function $F_{ss}(a, b)$
-using the following formula:
+Here $(\cdot, \cdot)$ denotes a dot product. Gradient of $f$ at the point
+$\bm{x_i}$ can be found using automatic differentiation and dual numbers
+described in \cref{sec:dual}. Note that acute angle between tangent lines equals
+to acute angle between normals, therefore we can find correlation function
+$F_{ss}(a, b)$ using the following formula:
 \begin{equation}
   F_{ss}(a, b) = \sum_i \frac{1}{\sqrt{1 - \cos^2 \phi_i}} \label{eq:fss-method}
 \end{equation}
@@ -355,10 +356,10 @@ The algorithm of calculating $F_{ss}(a, b)$ is the following:
 \end{enumerate}
 
 The set $X$ can be found by firstly evaluating $f(x, y)$ in some regular grid
-searching for all points $(x_i, y_i)$ for which $|f(x_i, y_i) - T| < \varepsilon$ 
-and $|f(x_i - a, y_i - b) - T| < \varepsilon$ for some positive $\varepsilon$
-and then using these points as starting points for some gradient descent based
-algorithm like ADAM to solve \cref{eq:inter}.
+searching for all points $(x_i, y_i)$ for which $|f(x_i, y_i) - T| < \epsilon$
+and $|f(x_i - a, y_i - b) - T| < \epsilon$ for some positive $\epsilon$
+and then using these points as starting points for some algorithm based on
+gradient descent like ADAM to solve \cref{eq:inter}.
 
 \section{Examples of two-dimensional sets with smooth boundary}
 \label{seq:examples}
@@ -408,7 +409,7 @@ only on distance $r$ from the origin:
   \right.
 \end{equation*}
 A comparison of the algorithm described in \cref{sec:algo} applied to images
-with different resolution with a theory is shown on \cref{fig:fss-disk-3x3}.
+with different resolution with a theory is shown on \cref{fig:fss-disk}.
 \begin{figure*}[!pt]
   \centering
   \subfigure[$3\times 3$ kernel $H$]{
@@ -587,9 +588,9 @@ calculating
       F_{ss}^{theory}(x_i))^2}{\sum_i F_{ss}^{theory}(x_i)^2}}
 \end{equation*}
 where $x_i$ belong to a set
-$(\varepsilon, 2R - \varepsilon) \cup (2R + \varepsilon, 1)$ (here we assume
-image dimensions to be $1 \times 1 \times 1$ length units). Taking
-$\varepsilon = 0.01$ we get $error = 0.006$ for filter $H$ and $error = 0.00017$
+$(\epsilon, 2R - \epsilon) \cup (2R + \epsilon, 1)$ (here we assume image
+dimensions to be $1 \times 1 \times 1$ length units). Taking
+$\epsilon = 0.01$ we get $error = 0.006$ for filter $H$ and $error = 0.00017$
 for filter $H'$.
 
 Unfortunately the filter $H'$ has some drawbacks in comparison with $H$. Firstly
