@@ -568,9 +568,29 @@ calculation for a ``blob'' described in \cref{sec:gauss} is show on
 \end{figure*}
 
 \section{Results}
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{images/ball-3d-ss.png}
+  \caption[]{Surface-surface function calculated for a three-dimensional ball
+    with radius $R = 0.24$ using filters $H$ and $H'$. Theoretical curve is
+    provided for a comparison. Image dimensions are $450 \times 450 \times 450$.}
+  \label{fig:fss-ball}
+\end{figure}
 With the new filter calculation of $F_{ss}$ becomes more precise, even for
 three-dimensional images. This can be seen in comparison with theoretical values
-for known cases like the one of overlapping balls \textcolor{red}{insert plot}.
+for known cases like the one of a ball. On \cref{fig:fss-ball} there are plots
+of $F_{ss}$ function calculated with filters $H$ and $H'$ along with a
+theoretical curve. It can be verified that filter $H'$ is better indeed by
+calculating
+\begin{equation*}
+  error = \sqrt{\frac{\sum_i (F_{ss}^{calc}(x_i) -
+      F_{ss}^{theory}(x_i))^2}{\sum_i F_{ss}^{theory}(x_i)^2}}
+\end{equation*}
+where $x_i$ belong to a set
+$(\varepsilon, 2R - \varepsilon) \cup (2R + \varepsilon, 1)$ (here we assume
+image dimensions to be $1 \times 1 \times 1$ length units). Taking
+$\varepsilon = 0.01$ we get $error = 0.006$ for filter $H$ and $error = 0.00017$
+for filter $H'$.
 
 Unfortunately the filter $H'$ has some drawbacks in comparison with $H$. Firstly
 $H$ has faster convergence with increase of image resolution. Our
