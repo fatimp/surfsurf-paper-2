@@ -30,7 +30,8 @@
 %\affiliation{\textsuperscript{3}Oil and Gas Research Institute Russian Academy
 %  of Sciences (OGRI RAS) 3, Gubkina st., Moscow, 119333, Russian Federation}
 
-\title{Surface correlation functions calculations: improving methodology for discrete images with novel exact continuous approach}
+\title{Surface correlation functions calculations: improving methodology for
+  discrete images with novel exact continuous approach}
 
 \begin{abstract}
   Here we are again.
@@ -42,38 +43,94 @@
 
 \section{Introduction}
 \label{sec:intro}
-Correlation functions (CFs) to describe structures arose from scattering experiments \cite{debye1957scattering} and
-found their way into numerous disciplines and applications: from material sciences \cite{Cecen,chen2022quantifying}, to rock
-\cite{ledesma2018effect} and soil physics \cite{Euras2012,PLoS_ONE,KarsaninaEJSS}, cosmology \cite{TakadaJain} and food
-engineering \cite{Derossi2019}. In particular, correlation functions as computed from structural images were used for:
+Correlation functions (CFs) to describe structures arose from scattering
+experiments \cite{debye1957scattering} and found their way into numerous
+disciplines and applications: from material sciences
+\cite{Cecen,chen2022quantifying}, to rock \cite{ledesma2018effect} and soil
+physics \cite{Euras2012,PLoS_ONE,KarsaninaEJSS}, cosmology \cite{TakadaJain} and
+food engineering \cite{Derossi2019}. In particular, correlation functions as
+computed from structural images were used for:
 \begin{enumerate}
-  \item characterization of morphology \cite{tensorPRE} and representativeness via
-  correlation lengths \cite{vcapek2011transport,thovert2011grain} at which CFs reach plateau;
-  \item comparison of different structures \cite{jiao2014chawla,EPL1,REVpaper}, usually by computing L-2 norm difference between CFs for two or more images,
-  \item compressing structural information \cite{SciRep1,Havelka} by representing huge datasets in the form of a limited set of CFs that can be further squeezed into parameters for a number of basis functions \cite{jiao_basis,KarsaninaEJSS},
-  \item describing structural dynamics and evolution \cite{chen2015dynamic,PLoS_ONE,xu2022correlation},
-  \item extracting features for deep learning \cite{Miao2017,kamrava2020linking,roding2020predicting,KarsaninaEJSS},
-  \item performing stochastic reconstructions \cite{Adler_recon,Y-T,EPL2,tahmasebiPRL,karsaninaPRL} based on limited input data such as, for example, CFs obtained from 2D cuts,
-  \item fusing multi-scale images \cite{SciRep1,chen2016stochastic,Geoderma2018} into a single representation,
-  \item evaluation of image replica quality, e.g., stochastic reconstructions \cite{deeep_papers_or_somethingelse},
+  \item characterization of morphology \cite{tensorPRE} and representativeness
+    via correlation lengths \cite{vcapek2011transport,thovert2011grain} at which
+    CFs reach plateau;
+  \item comparison of different structures \cite{jiao2014chawla,EPL1,REVpaper},
+    usually by computing L-2 norm difference between CFs for two or more images,
+  \item compressing structural information \cite{SciRep1,Havelka} by
+    representing huge datasets in the form of a limited set of CFs that can be
+    further squeezed into parameters for a number of basis functions
+    \cite{jiao_basis,KarsaninaEJSS},
+  \item describing structural dynamics and evolution
+    \cite{chen2015dynamic,PLoS_ONE,xu2022correlation},
+  \item extracting features for deep learning
+    \cite{Miao2017,kamrava2020linking,roding2020predicting,KarsaninaEJSS},
+  \item performing stochastic reconstructions
+    \cite{Adler_recon,Y-T,EPL2,tahmasebiPRL,karsaninaPRL} based on limited input
+    data such as, for example, CFs obtained from 2D cuts,
+  \item fusing multi-scale images \cite{SciRep1,chen2016stochastic,Geoderma2018}
+    into a single representation,
+  \item evaluation of image replica quality, e.g., stochastic reconstructions
+    \cite{deeep_papers_or_somethingelse},
   \item assessing stationarity of the structure at hand \cite{REVpaper}.
 \end{enumerate}
 
-In majority, if not all, cases mentioned above, surface functions - namely, $F_{ss}$ and $F_{sv}$ - were underrepresented due to our inability to compute them in a robust way. While known for a long time \cite{theory_in_MT}, only somewhat crude approximate approaches \cite{crude_approx_inMT} were developed until Ma and Torquato laid foundation for such a robust computational methodology \cite{ma2018SS}. They proposed an elegant solution for infinite resolution Gaussian random fields, or "continouos" approach. They also assumed that the same approach can be readily applied to discrete experimental images if grey-scale values are thresholded in a similar way to continuious Gaussian field. Samarin et al. \cite{our_SS_paper} argued that experimental images needs to be segmented first using current cutting edge techniques \cite{NNseg} and proposed "discrete" approach. The latter allowed to obtain surface functions closer to analytical solutions for overlapping disks/spheres and to supress noise, in particular for $F_{ss}$. The noise in Ma and Torquato method resulted from $1/cos(\theta)$ computations during random line segment placement - this leaves a room for improvements. While Samarin et al. obtained better convergence with analytical solution, this was demostrated only for overlapping disks image of limited size (that can potentially introduce some differences between computations and analytical solution for infinite size structure). Moreover, good agreement was achieved by manually fitting the values of edge-detecting filter that could lack accuracy for arbitrary structure different from overlapping disks. In other words, we still lack robustness in surface CFs evaluation due to inability to directly compare "discrete" versus "continuous" methodology, and verify both approaches for arbitrary geometries.
+In majority, if not all, cases mentioned above, surface functions - namely,
+$F_{ss}$ and $F_{sv}$ - were underrepresented due to our inability to compute
+them in a robust way. While known for a long time \cite{theory_in_MT}, only
+somewhat crude approximate approaches \cite{crude_approx_inMT} were developed
+until Ma and Torquato laid foundation for such a robust computational
+methodology \cite{ma2018SS}. They proposed an elegant solution for infinite
+resolution Gaussian random fields, or "continouos" approach. They also assumed
+that the same approach can be readily applied to discrete experimental images if
+grey-scale values are thresholded in a similar way to continuious Gaussian
+field. Samarin et al. \cite{our_SS_paper} argued that experimental images needs
+to be segmented first using current cutting edge techniques \cite{NNseg} and
+proposed "discrete" approach. The latter allowed to obtain surface functions
+closer to analytical solutions for overlapping disks/spheres and to supress
+noise, in particular for $F_{ss}$. The noise in Ma and Torquato method resulted
+from $1/cos(\theta)$ computations during random line segment placement - this
+leaves a room for improvements. While Samarin et al. obtained better convergence
+with analytical solution, this was demostrated only for overlapping disks image
+of limited size (that can potentially introduce some differences between
+computations and analytical solution for infinite size structure). Moreover,
+good agreement was achieved by manually fitting the values of edge-detecting
+filter that could lack accuracy for arbitrary structure different from
+overlapping disks. In other words, we still lack robustness in surface CFs
+evaluation due to inability to directly compare "discrete" versus "continuous"
+methodology, and verify both approaches for arbitrary geometries.
 
-If computed accurately for any arbitrary structure at hand, surface CFs can be utilized in a multitude of applications:
+If computed accurately for any arbitrary structure at hand, surface CFs can be
+utilized in a multitude of applications:
 \begin{enumerate}
-  \item describing real surfaces resulting from different mechanical processes, e.g., cracking \cite{some_examples},
-  \item delineating surface evolution \cite{chen2022} during such mechanical cracking events or reactive transport in porous media \cite{godinho2016,noiriel2021,prokhorov2022},
-  \item representing surface features in super-resolution and stochastic reconstruction techniques \cite{chen2020super,janssens2020,karimpouli2022}.
+  \item describing real surfaces resulting from different mechanical processes,
+    e.g., cracking \cite{some_examples},
+  \item delineating surface evolution \cite{chen2022} during such mechanical
+    cracking events or reactive transport in porous media
+    \cite{godinho2016,noiriel2021,prokhorov2022},
+  \item representing surface features in super-resolution and stochastic
+    reconstruction techniques \cite{chen2020super,janssens2020,karimpouli2022}.
 \end{enumerate}
-The examples above a just a few potential applications that, due to ability for surface CFs to establish themselves as universal interface/surface descriptors, highlight the necessity to establish robust techniques for $F_{ss}$ and $F_{sv}$ evaluation.
+The examples above a just a few potential applications that, due to ability for
+surface CFs to establish themselves as universal interface/surface descriptors,
+highlight the necessity to establish robust techniques for $F_{ss}$ and $F_{sv}$
+evaluation.
 
-In this contribution we continue to build upon foundational work of Ma and Torquato \cite{ma2018SS}
-and recent findings of Samarin et al. \cite{our_SS} to develop a robust and efficient approach to compute surface correlation functions from digital 2D and 3D images. In partiuclar, here our aim is to establish a direct verification of "discrete" methodology (that is easily parallelizable on CPU and GPU architectures) using exact noiseless "continuous" approach for arbitrary structures (still described by some continuous function). The rest of the manuscript is organized
-as follows: in \cref{sec:def} we introduce some major definitions of CFs necessary for establishing algorithms, in \cref{sec:algo} we describe the all methodological details for "discrete" method for digital images. Next, in
-\cref{sec:verify} we explain in detail why verification of computational approaches for digital images is currently hampered, and then introduce
-novel exact "continuous" methodology in \cref{sec:cool-algo}. The choice of verification cases is presented in \cref{sec:fss-2d} followed by improvements in methodology of Samarin et al. The paper concludes with discussion, outline and summary in \cref{sec:summary}.
+In this contribution we continue to build upon foundational work of Ma and
+Torquato \cite{ma2018SS} and recent findings of Samarin et al. \cite{our_SS} to
+develop a robust and efficient approach to compute surface correlation functions
+from digital 2D and 3D images. In partiuclar, here our aim is to establish a
+direct verification of "discrete" methodology (that is easily parallelizable on
+CPU and GPU architectures) using exact noiseless "continuous" approach for
+arbitrary structures (still described by some continuous function). The rest of
+the manuscript is organized as follows: in \cref{sec:def} we introduce some
+major definitions of CFs necessary for establishing algorithms, in
+\cref{sec:algo} we describe the all methodological details for "discrete" method
+for digital images. Next, in \cref{sec:verify} we explain in detail why
+verification of computational approaches for digital images is currently
+hampered, and then introduce novel exact "continuous" methodology in
+\cref{sec:cool-algo}. The choice of verification cases is presented in
+\cref{sec:fss-2d} followed by improvements in methodology of Samarin et al. The
+paper concludes with discussion, outline and summary in \cref{sec:summary}.
 
 \section{Definitions}
 \label{sec:def}
@@ -98,12 +155,14 @@ $F_{ss}$ and surface-void correlation function $F_{sv}$ are then defined as foll
   F_{sv}(\bm{r}) &= \langle |\nabla \chi_S(\bm{x})| \chi_V(\bm{x} +
   \bm{r}) \rangle \label{eq:fsv}
 \end{align}
-Here the brackets $\langle \dots \rangle$ denote ensemble average. For isotropic homogeneous media
-vector values $\bm{x}$ and $\bm{r}$ can be replaced with scalars. In case correlation functions are computed
-in predefined directions, scalar values can be also used for anisotropic structures \cite{jiao2014chawla,EPL1}.
+Here the brackets $\langle \dots \rangle$ denote ensemble average. For isotropic
+homogeneous media vector values $\bm{x}$ and $\bm{r}$ can be replaced with
+scalars. In case correlation functions are computed in predefined directions,
+scalar values can be also used for anisotropic structures
+\cite{jiao2014chawla,EPL1}.
 
-More detailed information on surface correlation functions can be found in comprehensive
-Torquato's book \cite{Torquato_book}.
+More detailed information on surface correlation functions can be found in
+comprehensive Torquato's book \cite{Torquato_book}.
 
 \section{Algorithm for computation of surface functions}
 \label{sec:algo}
