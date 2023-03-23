@@ -157,16 +157,39 @@ $F_{ss}$ and surface-void correlation function $F_{sv}$ are then defined as foll
 \end{align}
 Here the brackets $\langle \dots \rangle$ denote ensemble average. If the medium
 under consideration is also isotropic, the argument in functions $F_{ss}$ and
-$F_{sv}$ can be replaced with a scalar:
+$F_{sv}$ can be replaced with a scalar $r = |\bm{r}|$:
 \begin{align*}
-  F_{ss}(r) &= F_{ss}(|\bm{r}|) \\
-  F_{sv}(r) &= F_{sv}(|\bm{r}|)
+  F_{ss}(r) &= F_{ss}(\bm{r}) \\
+  F_{sv}(r) &= F_{sv}(\bm{r})
 \end{align*}
 In case correlation functions are computed in predefined directions, scalar
-values can be also used for anisotropic structures \cite{jiao2014chawla,EPL1}.
+values can be also used for anisotropic structures
+\cite{jiao2014chawla,EPL1}. These functions are defined for media with
+dimensionality of 2 and higher and have units of measurement $m^{-1}$ for
+$F_{sv}$ and $m^{-2}$ for $F_{ss}$.
+
+Another function studied in this paper is surface-surface-surface function
+$F_{sss}$. It is defined as follows:
+\begin{equation}
+  F_{sss}(\bm{r_1}, \bm{r_2}) = \langle |\nabla \chi_S(\bm{x})|
+  |\nabla \chi_S(\bm{x} + \bm{r_1})|
+  |\nabla \chi_S(\bm{x} + \bm{r_2})|
+  \rangle \label{eq:fsss}
+\end{equation}
+This function is defined for media with dimensionality 3 or higher and has unit
+of measurement $m^{-3}$. For three-dimensional media $F_{sss}$ is a function of
+six scalar arguments: $\bm{r_1} = (r_{1x}, r_{1y}, r_{1z})$ and
+$\bm{r_2} = (r_{2x}, r_{2y}, r_{2z})$. However if the medium under consideration
+is isotropic, only three scalar arguments $r_1 = |\bm{r_1}|$, $r_2 = |\bm{r_2}|$
+and $r_3 = |\bm{r_1} - \bm{r_2}|$ are required. The last argument can be
+replaced with an angle $\theta$ between vectors $\bm{r_1}$ and $\bm{r_2}$:
+\begin{equation*}
+  F_{sss}(r_1, r_2, r_3) = F_{sss}(r_1, r_2, \theta) = F_{sss}(\bm{r_1}, \bm{r_2})
+\end{equation*}
+
 
 More detailed information on surface correlation functions can be found in
-comprehensive Torquato's book \cite{Torquato_book}.
+\cref{sec:verify} and comprehensive Torquato's book \cite{Torquato_book}.
 
 \section{Algorithm for computation of surface functions}
 \label{sec:algo}
