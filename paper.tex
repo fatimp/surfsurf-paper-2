@@ -155,11 +155,15 @@ $F_{ss}$ and surface-void correlation function $F_{sv}$ are then defined as foll
   F_{sv}(\bm{r}) &= \langle |\nabla \chi_S(\bm{x})| \chi_V(\bm{x} +
   \bm{r}) \rangle \label{eq:fsv}
 \end{align}
-Here the brackets $\langle \dots \rangle$ denote ensemble average. For isotropic
-homogeneous media vector values $\bm{x}$ and $\bm{r}$ can be replaced with
-scalars. In case correlation functions are computed in predefined directions,
-scalar values can be also used for anisotropic structures
-\cite{jiao2014chawla,EPL1}.
+Here the brackets $\langle \dots \rangle$ denote ensemble average. If the medium
+under consideration is also isotropic, the argument in functions $F_{ss}$ and
+$F_{sv}$ can be replaced with a scalar:
+\begin{align*}
+  F_{ss}(r) &= F_{ss}(|\bm{r}|) \\
+  F_{sv}(r) &= F_{sv}(|\bm{r}|)
+\end{align*}
+In case correlation functions are computed in predefined directions, scalar
+values can be also used for anisotropic structures \cite{jiao2014chawla,EPL1}.
 
 More detailed information on surface correlation functions can be found in
 comprehensive Torquato's book \cite{Torquato_book}.
@@ -694,6 +698,8 @@ $F_{ss}$ using $H$ but not $H'$. Secondly, $H'$ behaves worse that $H$ in points
 of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
 
 \section{Conclusion}
+% Is this a right label?
+\label{sec:summary}
 In this paper we develop an algorithm for precise calculation of surface-surface
 correlation function for two-dimensional sets with smooth boundary and checked
 our fast algorithm using these new cases. The fast algorithm was improved using
