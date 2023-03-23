@@ -376,7 +376,10 @@ boundary $\Gamma$.
   \includegraphics[width=0.8\linewidth]{images/fss-zoomed.png}
   \caption[]{Zoomed image of intersection between the interface $\Gamma$ and its
     translated version $\Gamma'$. $\phi$ is an angle between tangent lines to
-    the interfaces. Surface of dashed area is $\frac{\Delta^2}{\sin \phi}$.}
+    the interfaces. Surface of dashed area is
+    $\frac{\Delta^2}{\sin \phi}$. Vectors $\bm{a}$ and $\bm{b}$ are unit vectors
+    parallel to normals to $\Gamma$ and $\Gamma'$ respectively in the point of
+    their intersection.}
   \label{fig:fss-zoomed}
 \end{figure}
 Now define a functional sequence $F_{ss}(\bm{x}; \Delta)$:
@@ -395,11 +398,46 @@ intersection: $S_k = \frac{\Delta^2}{\sin \phi_k}$ where $\phi_k$ is an
 acute angle between tangent lines. Hence, we get the following equation:
 \begin{equation}
   F_{ss}(\bm{r}) = \lim_{\Delta \to 0} F_{ss}(\bm{r}; \Delta) =
-  \sum_{k=1}^N \frac{1}{\sin \phi_k} \label{eq:fss-2d}
+  \sum_{k=1}^N \frac{1}{\sin \phi_k} \label{eq:fss-2d-sin}
 \end{equation}
 It's easy to show that
 $\lim_{\Delta \to 0} f_\Gamma(\bm{x}; \Delta) = |\nabla \chi_A(\bm{x})|$
-and therefore \cref{eq:fss-2d} and \cref{eq:fss} define the same function.
+and therefore \cref{eq:fss-2d-sin} and \cref{eq:fss} define the same function.
+
+A less illustrative but more practical way to calculate an expression
+$\frac{S_k}{\Delta}$ is the following. Take two vectors $\bm{a}$ and $\bm{b}$
+parallel to normals to $\Gamma$ and $\Gamma'$ in $k$-th point of their
+intersection such as $|a| = |b| = 1$. If $F_{ss}$ is defined at the point of
+consideration then $\bm{a} \ne k\bm{b}$. The pair $(a, b)$ may serve as a basis
+with the following transformation from the basis $(0,1), (1,0)$:
+\begin{align*}
+  x' &= f(x, y) = a_x x + a_y y \\
+  y' &= g(x, y) = b_x x + b_y y
+\end{align*}
+where $\bm{a} = (a_x, a_y)$, $\bm{b} = (b_x, b_y)$. Jacobian determinant for
+this transformation is
+\begin{equation*}
+  J = \left|
+  \begin{array}{cc}
+    \frac{\partial f}{\partial x} & \frac{\partial f}{\partial y} \\
+    \frac{\partial g}{\partial x} & \frac{\partial g}{\partial y} \\
+  \end{array}
+  \right| =
+  \left|
+  \begin{array}{cc}
+    a_x & a_y \\
+    b_x & b_y
+  \end{array}
+  \right| = a_x b_y - a_y b_x
+\end{equation*}
+
+We can rewritte \cref{eq:fss-2d-sin} using $J$ as follows:
+\begin{equation}
+  F_{ss}(\bm{r}) = \sum_{k=1}^N \frac{1}{|J_k|} \label{eq:fss-2d}
+\end{equation}
+where $J_k$ is Jacobian determinant computed at $k$-th point of
+intersection. This form proves to be much more useful than the version which
+contains the angle $\phi$.
 
 \subsection{Dual numbers and automatic differentiation}
 \label{sec:dual}
@@ -494,28 +532,17 @@ which can be replaced by one equation
   (f(x, y) - T)^2 + (f(x-a, y-b) - T)^2 = 0 \label{eq:inter}
 \end{equation}
 We denote a set of solutions of this equation as $X$. For every $\bm{x}_i \in X$
-we find an angle $\phi_i$ between a normal to the boundary and a normal to
-the translated boundary as
-\begin{equation}
-  \cos \phi_i = \frac{(\nabla f(x,y) \vert_{\bm{x}_i}, \nabla f(x-a,y-b)
-    \vert_{\bm{x}_i})}{|\nabla f(x,y) \vert_{\bm{x}_i}| |\nabla f(x-a,y-b)
-    \vert_{\bm{x}_i}|} \label{eq:angle}
-\end{equation}
-Here $(\cdot, \cdot)$ denotes a dot product. Gradient of $f$ at the point
-$\bm{x_i}$ can be found using automatic differentiation and dual numbers
-described in \cref{sec:dual}. Note that acute angle between tangent lines equals
-to acute angle between normals, therefore we can find correlation function
-$F_{ss}(a, b)$ using the following formula:
-\begin{equation}
-  F_{ss}(a, b) = \sum_i \frac{1}{\sqrt{1 - \cos^2 \phi_i}} \label{eq:fss-method}
-\end{equation}
+we find normals to the boundary and the boundary translated by a vector
+$(a, b)$. These normals can be found using automatic differentiation and dual
+numbers described in \cref{sec:dual}. Then we normalize these normals (i.e. make
+their length equal to $1$) and use \cref{eq:fss-2d} to calculate $F_{ss}$.
 
-The algorithm of calculating $F_{ss}(a, b)$ is the following:
+Summarizing, the algorithm of calculating $F_{ss}(a, b)$ is the following:
 \begin{enumerate}
 \item Find $X$ which is a set of soulutions of \cref{eq:inter}.
-\item For all points in $X$ find cosines between normals to the boundaries using
-  \cref{eq:angle}.
-\item Calculate $F_{ss}(a, b)$ using \cref{eq:fss-method}.
+\item For all points in $X$ find normals to the boundaries using automatic
+  differentiation.
+\item Calculate $F_{ss}(a, b)$ using \cref{eq:fss-2d}.
 \end{enumerate}
 
 The set $X$ can be found by firstly evaluating $f(x, y)$ in some regular grid
