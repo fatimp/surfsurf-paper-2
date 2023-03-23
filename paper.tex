@@ -193,13 +193,12 @@ More detailed information on surface correlation functions can be found in
 
 \section{Algorithm for computation of surface functions}
 \label{sec:algo}
-Here we briefly describe an algorithm for computation of surface-surface and
-surface-void correlation functions for digital images of porous media. A more
-detailed description can be found in a paper of Samarin
-et~al. \textcolor{red}{cite paper} This algorithm can calculate surface
+Here we briefly describe an algorithm for computation of surface-surface,
+surface-void and surface-surface-surface correlation functions for digital
+images of porous media. A more detailed description can be found in a paper of
+Samarin et~al. \textcolor{red}{cite paper} This algorithm can calculate surface
 correlation functions for all possible directions and correlation lengths. It
-consists of two stages: edge detection stage and computation of
-autocorrelation.
+consists of two stages: edge detection stage and computation of autocorrelation.
 
 We give an image of porous medium in the form of two- or three-dimensional bit
 array $A$ as the input to our algorithm. In the first stage, we convolve the
@@ -240,7 +239,12 @@ is performed as follows:
   \text{for 3D}
 \end{align*}
 Therefore $A'$ has non-zero elements only in a small area around interface
-between phases in $A$.
+between phases in $A$. This operation is convolution of a filter $H$ with an
+image $A$ and can be performed using Fourier transform:
+\begin{equation*}
+  A' = H*A = F^{-1}[F[H] F[A]]
+\end{equation*}
+Here $F$ is a forward Fourier transform and $F^{-1}$ is its inverse.
 
 In the second stage we calculate autocorrelation for $A'$ and divide it by a
 total number of elements in $A$:
@@ -251,7 +255,7 @@ total number of elements in $A$:
   \quad \text{for 3D}
 \end{align*}
 Calculation of sums in the latter equations can be performed using the following
-properties of Fourier transform:
+properties of Fourier transform (here $\hat{f}(z) = F[f(x)]$):
 \begin{equation*}
   F[f(x) \star f(x)] = F[f(x) * f(-x)] = \hat{f}(z)\overline{\hat{f}(z)} = |\hat{f}(z)|^2
 \end{equation*}
@@ -289,10 +293,49 @@ the same shape as $A$ which contains values of correlation function for the
 vector $r = (i, j)$ (resp. $r = (i, j, k)$). This result can be averaged over
 all directions if needed.
 
-From now on we will work with square images with dimensions $1 \times 1$ square
-length units, so we can omit division by $N$ in described algorithms and
-ensemble average in \cref{eq:fss} and \cref{eq:fsv} becomes a double integral
-over a square $[0, 1]^2$.
+For surface-surface-surface function $F_{sss}$ the former approach can also be
+used, but it would be highly inefficient memory-wise because for three
+dimensional case $F_{sss}$ is a function of six scalar coordinates which leads
+to a very large output array. Instead of this approach we use a slower approach
+which computes $F_{sss}$ at a specified point calculating a convolution using
+its definition:
+\begin{algorithmic}[1]
+  \Procedure{surfsurfsurf}{$A$, $\bm{r_1}$, $\bm{r_2}$}
+  \State $A' \gets A*H$
+  \Comment{$A'$ becomes an interface of $A$.}
+  \State $A'_1 \gets shift(A', \bm{r_1})$
+  \Comment{Shift $A$ in $i$-th dimension by $r_{1i}$ for all $i \in \overline{1, ndim(A)}$}
+  \State $A'_2 \gets shift(A', \bm{r_2})$
+  \Comment{Shift $A$ in $i$-th dimension by $r_{2i}$ for all $i \in \overline{1, ndim(A)}$}
+  \State $M \gets A' \cdot A'_1 \cdot A'_2$
+  \Comment{Multiplicate three arrays element-wise}
+  \State \textbf{return} $\sum_{i} M_{i} / N$
+  \Comment{Sum all elements in $M$ and divide by a number of elements in $A$}
+  \EndProcedure
+\end{algorithmic}
+This algorithm can be vectorized and therefore benefits from the usage of
+GPUs. Shift function in this algorithm must be a circular shift which
+``rotates'' content of the array, if periodic boundary conditions are
+desired. For our purpose we use $F_{sss}$ function in the form
+$F_{sss}(r_1, r_2, \theta)$ and fix $\theta = \pi/2$. This leads us to a
+sampling pattern shown on \cref{fig:Fsss-pattern}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/pattern.png}
+  \caption[]{Sampling pattern used for calculation of $F_{sss}$ in our
+    implementation is a right triangle with varying catets $r_1$ and
+    $r_2$. Patterns can lie in planes $XY$ (as on the picture), $XZ$ or
+    $YZ$. Black dots depict elements of $A'$}
+  \label{fig:Fsss-pattern}
+\end{figure}
+
+From now on when considering $F_{ss}$ and $F_{sv}$ functions we will work with
+square images which have unit area, so we can omit division by $N$ in described
+algorithms and ensemble average in \cref{eq:fss} and \cref{eq:fsv} becomes a
+double integral over a square $[0, 1]^2$. When considering $F_{sss}$ function we
+will work with cubic images which have unit volume. Then we can also omit
+division by $N$ and ensemble average in \cref{eq:fsss} becomes a triple integral
+over a cube $[0, 1]^3$.
 
 \section{Problem of verification}
 \label{sec:verify}
