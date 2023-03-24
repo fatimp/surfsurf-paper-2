@@ -441,19 +441,18 @@ contains the angle $\phi$.
 
 \subsection{Dual numbers and automatic differentiation}
 \label{sec:dual}
-A ring of dual numbers $D$ is a set of pairs of real numbers $(x, y)$ with two
+A ring of dual numbers $D$ is a set of pairs of real numbers $(a, b)$ with two
 binary operations: $+$ (addition) and $\cdot$ (multiplication) where
 multiplication works according to the following law:
 \begin{equation*}
-  (x_1, y_1)\cdot(x_2, y_2) = (x_1x_2, x_1y_2 + y_1x_2)
+  (a, b)\cdot(c, d) = (ac, ad + bc)
 \end{equation*}
 It's easy to see that $D$ is commutative.
 
 It's useful to introduce an imaginary unit $\varepsilon$ and write a dual number
-$(x, y)$ as $x + y\varepsilon$. As you can see from multiplication law,
+$(a, b)$ as $a + b\varepsilon$. As you can see from multiplication law,
 $1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
-integral domain and division is not defined \textcolor{red}{for all dual numbers with exception
-of $0$.} Namely it's defined only if divisor has non-zero real part:
+integral domain and division is defined only if divisor has non-zero real part:
 \begin{align*}
   \frac{a+b\varepsilon}{c+d\varepsilon} &=
   \frac{(a+b\varepsilon)(c-d\varepsilon)}{(c+d\varepsilon)(c-d\varepsilon)} \\
@@ -461,22 +460,25 @@ of $0$.} Namely it's defined only if divisor has non-zero real part:
   &= \frac{a}{c} + \frac{bc-ad}{c^2}\varepsilon
 \end{align*}
 
-Power function $(a + b\varepsilon)^n$ where $n \in \mathbb{N}$ can be defined
-using binomial formula and keeping in mind that $\varepsilon^n = 0$ if $n>1$:
+Now we consider functions of dual variable $x + y\varepsilon$. Power function
+$(x + y\varepsilon)^n$ where $n \in \mathbb{N}$ can be defined using binomial
+formula and keeping in mind that $\varepsilon^n = 0$ if $n>1$:
 \begin{equation*}
-  (a + b\varepsilon)^n = \sum_{k=0}^n \binom{n}{k} a^k (b\varepsilon)^{n-k} =
-  a^n + n a^{n-1} b \varepsilon
+  (x + y\varepsilon)^n = \sum_{k=0}^n \binom{n}{k} x^k (y\varepsilon)^{n-k} =
+  x^n + n x^{n-1} y \varepsilon
 \end{equation*}
-This formula can be extended on $n \in \mathbb{Q}$ as well.
+This formula can be extended to $n \in \mathbb{Q}$ as well.
 
-Elementary functions can be extended to dual numbers using Taylor series. For
-example, the exponent function is extended as:
+Elementary functions can be extended to dual numbers using Taylor series (here
+$a$ is some point at which $f$ is differentiable):
 \begin{align*}
-  e^{a + b\varepsilon} &= \sum_{k=0}^{\infty}\frac{(a + b\varepsilon)^k}{k!} \\
-  &= \sum_{k=0}^{\infty} \frac{a^k + bka^{k-1}\varepsilon}{k!} \\
-  &= \sum_{k=0}^{\infty} \frac{a^k}{k!} + b\varepsilon \sum_{k=1}^{\infty}
-  \frac{a^{k-1}}{(k-1)!} \\
-  &= e^a + e^ab\varepsilon
+  f(x + y\varepsilon) &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x + y\varepsilon)^2 \\
+  & \qquad + \frac{f'''(a)}{3!}(x + y\varepsilon)^3 + \dots \\
+  &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x^2 + 2xy\varepsilon) \\
+  & \qquad + \frac{f'''(a)}{3!}(x^3 + 3x^2y\varepsilon) + \dots \\
+  &= f(a) + f'(a)x + \frac{f''(a)}{2!}x^2 + \frac{f'''(a)}{3!}x^3 + \dots \\
+  & \quad y\varepsilon(f'(a) + f''(a)x + \frac{f'''(a)}{2!}x^2 + \dots) \\
+  &= f(x) + yf'(x)\varepsilon
 \end{align*}
 
 Here are some basic rules for working with dual numbers (some of which we have
@@ -491,24 +493,22 @@ already described):
 \item $\tan(a + b\varepsilon) = \tan(a) - \frac{b}{cos^2(a)}\varepsilon$
 \end{itemize}
 
-It's easy to see, that there is a connection between dual numbers and
-differentiation. Indeed, if functions $f(x)$ and $g(x)$
-are differentiable at the point $a$ and $h(x) = f(x)g(x)$ is their product then
-$h(a + b\varepsilon) = h(a) + b\varepsilon(f'(a)g(a) + f(a)g'(a))$.
-If $h(x) = f(x)/g(x)$ and $g(a) \ne 0$ then
-$h(a + b\varepsilon) = h(a) + b\varepsilon\frac{f'(a)g(a) - f(a)g'(a)}{f^2(a)}$.
-More generally, we can see that $f(a + b\varepsilon) = f(a) + bf'(a)\varepsilon$.
-
-So, using dual numbers we can compute two values at once: one of the function at
-the point $x = a$ and the other of its derivative at this point:
-$f(a + \varepsilon) = f(a) + \varepsilon f'(a)$. Also we can compute a partial
+As you can see, dual numbers are connected with differentiation. Using a dual
+argument $a + \varepsilon$ we can compute a value of a function at point $x = a$
+and its derivative at that point:
+$f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also we can compute a partial
 derivative of a multivariate function. For example:
-\begin{align*}
-  \frac{\partial}{\partial x} f(x, y) \vert_{x = a, y = b} &= f(a + \varepsilon,
-  b) \\
-  \frac{\partial}{\partial y} f(x, y) \vert_{x = a, y = b} &= f(a, b +
-  \varepsilon)
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial}{\partial x} f(x, y) \vert_{x = a, y = b} &= f(a + \varepsilon,
+    b) \\
+    \frac{\partial}{\partial y} f(x, y) \vert_{x = a, y = b} &= f(a, b +
+    \varepsilon)
+  \end{aligned}
+  \label{eq:autonormals}
+\end{equation}
+The last equation will be useful for computation of normals to the interface in
+next sections.
 
 \subsection{Surface-surface function for two-dimensional sets with smooth boundary}
 \label{sec:cool-algo}
@@ -540,8 +540,8 @@ their length equal to $1$) and use \cref{eq:fss-2d} to calculate $F_{ss}$.
 Summarizing, the algorithm of calculating $F_{ss}(a, b)$ is the following:
 \begin{enumerate}
 \item Find $X$ which is a set of soulutions of \cref{eq:inter}.
-\item For all points in $X$ find normals to the boundaries using automatic
-  differentiation.
+\item For all points in $X$ find normals to the boundaries using
+  \cref{eq:autonormals}.
 \item Calculate $F_{ss}(a, b)$ using \cref{eq:fss-2d}.
 \end{enumerate}
 
