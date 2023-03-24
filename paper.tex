@@ -128,9 +128,10 @@ major definitions of CFs necessary for establishing algorithms, in
 for digital images. Next, in \cref{sec:verify} we explain in detail why
 verification of computational approaches for digital images is currently
 hampered, and then introduce novel exact "continuous" methodology in
-\cref{sec:cool-algo}. The choice of verification cases is presented in
-\cref{sec:fss-2d} followed by improvements in methodology of Samarin et al. The
-paper concludes with discussion, outline and summary in \cref{sec:summary}.
+\cref{sec:fss-2d}. The choice of verification cases is presented in
+\textcolor{red}{Fix reference} followed by improvements in methodology of
+Samarin et al. The paper concludes with discussion, outline and summary in
+\cref{sec:summary}.
 
 \section{Definitions}
 \label{sec:def}
@@ -342,10 +343,82 @@ over a cube $[0, 1]^3$.
 In paper \textcolor{red}{our paper} we tested these algorithms against known
 analytic solutions. Although we obtained acceptable results in the cases of
 overlapping balls and disks, we were not sure if our algorithm performs good in
-general and searched for more test cases. Here we present one such case:
-two-dimensional sets with smooth boundary.
+general and searched for more test cases. Here we briefly discuss dual numbers
+and autodifferentiation technique and present another case: two- and
+three-dimensional sets with smooth boundary.
 
-\subsection{Surface-surface function in two-dimensional case}
+\subsection{Dual numbers and automatic differentiation}
+\label{sec:dual}
+A ring of dual numbers $D$ is a set of pairs of real numbers $(a, b)$ with two
+binary operations: $+$ (addition) and $\cdot$ (multiplication) where
+multiplication works according to the following law:
+\begin{equation*}
+  (a, b)\cdot(c, d) = (ac, ad + bc)
+\end{equation*}
+It's easy to see that $D$ is commutative.
+
+It's useful to introduce an imaginary unit $\varepsilon$ and write a dual number
+$(a, b)$ as $a + b\varepsilon$. As you can see from multiplication law,
+$1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
+integral domain and division is defined only if divisor has non-zero real part:
+\begin{align*}
+  \frac{a+b\varepsilon}{c+d\varepsilon} &=
+  \frac{(a+b\varepsilon)(c-d\varepsilon)}{(c+d\varepsilon)(c-d\varepsilon)} \\
+  &= \frac{ac-ad\varepsilon+bc\varepsilon}{c^2} \\
+  &= \frac{a}{c} + \frac{bc-ad}{c^2}\varepsilon
+\end{align*}
+
+Now we consider functions of dual variable $x + y\varepsilon$. Power function
+$(x + y\varepsilon)^n$ where $n \in \mathbb{N}$ can be defined using binomial
+formula and keeping in mind that $\varepsilon^n = 0$ if $n>1$:
+\begin{equation*}
+  (x + y\varepsilon)^n = \sum_{k=0}^n \binom{n}{k} x^k (y\varepsilon)^{n-k} =
+  x^n + n x^{n-1} y \varepsilon
+\end{equation*}
+This formula can be extended to $n \in \mathbb{Q}$ as well.
+
+Elementary functions can be extended to dual numbers using Taylor series (here
+$a$ is some point at which $f$ is differentiable):
+\begin{align*}
+  f(x + y\varepsilon) &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x + y\varepsilon)^2 \\
+  & \qquad + \frac{f'''(a)}{3!}(x + y\varepsilon)^3 + \dots \\
+  &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x^2 + 2xy\varepsilon) \\
+  & \qquad + \frac{f'''(a)}{3!}(x^3 + 3x^2y\varepsilon) + \dots \\
+  &= f(a) + f'(a)x + \frac{f''(a)}{2!}x^2 + \frac{f'''(a)}{3!}x^3 + \dots \\
+  & \quad y\varepsilon(f'(a) + f''(a)x + \frac{f'''(a)}{2!}x^2 + \dots) \\
+  &= f(x) + yf'(x)\varepsilon
+\end{align*}
+
+Here are some basic rules for working with dual numbers (some of which we have
+already described):
+\begin{itemize}
+\item $(a + b\varepsilon) + (c + d\varepsilon) = (a + c) + (b + d)\varepsilon$
+\item $(a + b\varepsilon) (c + d\varepsilon) = ac + (ad + bc)\varepsilon$
+\item $\frac{a + b\varepsilon}{c + d\varepsilon} = \frac{a}{c} + \frac{bc - ad}{c^2}$
+\item $\exp(a + b\varepsilon) = \exp(a) + b\varepsilon\exp(a)$
+\item $\sin(a + b\varepsilon) = \sin(a) + b\varepsilon\cos(a)$
+\item $\cos(a + b\varepsilon) = \cos(a) - b\varepsilon\sin(a)$
+\item $\tan(a + b\varepsilon) = \tan(a) - \frac{b}{cos^2(a)}\varepsilon$
+\end{itemize}
+
+As you can see, dual numbers are connected with differentiation. Using a dual
+argument $a + \varepsilon$ we can compute a value of a function at point $x = a$
+and its derivative at that point:
+$f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also we can compute a partial
+derivative of a multivariate function. For example:
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial}{\partial x} f(x, y) \vert_{x = a, y = b} &= f(a + \varepsilon,
+    b) \\
+    \frac{\partial}{\partial y} f(x, y) \vert_{x = a, y = b} &= f(a, b +
+    \varepsilon)
+  \end{aligned}
+  \label{eq:autonormals}
+\end{equation}
+The last equation will be useful for computation of normals to the interface in
+next sections.
+
+\subsection{Surface-surface function for two-dimensional sets with smooth boundary}
 \label{sec:fss-2d}
 \begin{figure}
   \centering
@@ -439,86 +512,13 @@ where $J_k$ is Jacobian determinant computed at $k$-th point of
 intersection. This form proves to be much more useful than the version which
 contains the angle $\phi$.
 
-\subsection{Dual numbers and automatic differentiation}
-\label{sec:dual}
-A ring of dual numbers $D$ is a set of pairs of real numbers $(a, b)$ with two
-binary operations: $+$ (addition) and $\cdot$ (multiplication) where
-multiplication works according to the following law:
-\begin{equation*}
-  (a, b)\cdot(c, d) = (ac, ad + bc)
-\end{equation*}
-It's easy to see that $D$ is commutative.
-
-It's useful to introduce an imaginary unit $\varepsilon$ and write a dual number
-$(a, b)$ as $a + b\varepsilon$. As you can see from multiplication law,
-$1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
-integral domain and division is defined only if divisor has non-zero real part:
-\begin{align*}
-  \frac{a+b\varepsilon}{c+d\varepsilon} &=
-  \frac{(a+b\varepsilon)(c-d\varepsilon)}{(c+d\varepsilon)(c-d\varepsilon)} \\
-  &= \frac{ac-ad\varepsilon+bc\varepsilon}{c^2} \\
-  &= \frac{a}{c} + \frac{bc-ad}{c^2}\varepsilon
-\end{align*}
-
-Now we consider functions of dual variable $x + y\varepsilon$. Power function
-$(x + y\varepsilon)^n$ where $n \in \mathbb{N}$ can be defined using binomial
-formula and keeping in mind that $\varepsilon^n = 0$ if $n>1$:
-\begin{equation*}
-  (x + y\varepsilon)^n = \sum_{k=0}^n \binom{n}{k} x^k (y\varepsilon)^{n-k} =
-  x^n + n x^{n-1} y \varepsilon
-\end{equation*}
-This formula can be extended to $n \in \mathbb{Q}$ as well.
-
-Elementary functions can be extended to dual numbers using Taylor series (here
-$a$ is some point at which $f$ is differentiable):
-\begin{align*}
-  f(x + y\varepsilon) &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x + y\varepsilon)^2 \\
-  & \qquad + \frac{f'''(a)}{3!}(x + y\varepsilon)^3 + \dots \\
-  &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x^2 + 2xy\varepsilon) \\
-  & \qquad + \frac{f'''(a)}{3!}(x^3 + 3x^2y\varepsilon) + \dots \\
-  &= f(a) + f'(a)x + \frac{f''(a)}{2!}x^2 + \frac{f'''(a)}{3!}x^3 + \dots \\
-  & \quad y\varepsilon(f'(a) + f''(a)x + \frac{f'''(a)}{2!}x^2 + \dots) \\
-  &= f(x) + yf'(x)\varepsilon
-\end{align*}
-
-Here are some basic rules for working with dual numbers (some of which we have
-already described):
-\begin{itemize}
-\item $(a + b\varepsilon) + (c + d\varepsilon) = (a + c) + (b + d)\varepsilon$
-\item $(a + b\varepsilon) (c + d\varepsilon) = ac + (ad + bc)\varepsilon$
-\item $\frac{a + b\varepsilon}{c + d\varepsilon} = \frac{a}{c} + \frac{bc - ad}{c^2}$
-\item $\exp(a + b\varepsilon) = \exp(a) + b\varepsilon\exp(a)$
-\item $\sin(a + b\varepsilon) = \sin(a) + b\varepsilon\cos(a)$
-\item $\cos(a + b\varepsilon) = \cos(a) - b\varepsilon\sin(a)$
-\item $\tan(a + b\varepsilon) = \tan(a) - \frac{b}{cos^2(a)}\varepsilon$
-\end{itemize}
-
-As you can see, dual numbers are connected with differentiation. Using a dual
-argument $a + \varepsilon$ we can compute a value of a function at point $x = a$
-and its derivative at that point:
-$f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also we can compute a partial
-derivative of a multivariate function. For example:
-\begin{equation}
-  \begin{aligned}
-    \frac{\partial}{\partial x} f(x, y) \vert_{x = a, y = b} &= f(a + \varepsilon,
-    b) \\
-    \frac{\partial}{\partial y} f(x, y) \vert_{x = a, y = b} &= f(a, b +
-    \varepsilon)
-  \end{aligned}
-  \label{eq:autonormals}
-\end{equation}
-The last equation will be useful for computation of normals to the interface in
-next sections.
-
-\subsection{Surface-surface function for two-dimensional sets with smooth boundary}
-\label{sec:cool-algo}
-Here we examine two-dimensional sets with smooth boundary described in
-\cref{sec:fss-2d} more closely. Suppose a set $S$ is defined as
-$S = \left\{ (x, y) \ | \quad f(x, y) \le T \right\}$ where $f(x, y)$ is some function
-differentiable at points where $f(x, y) = T$ and $T$ is some threshold. Let's
-calculate surface-surface function for this set at a point $(a, b)$. We find all
-intersections between a boundary $\Gamma$ and its translated version by solving a
-system of equations
+Now we get to practical algorithm for computation of $F_{ss}$ for sets with a
+smooth boundary. Suppose a set $S$ is defined as
+$S = \left\{ (x, y) \ | \quad f(x, y) \le T \right\}$ where $f(x, y)$ is some
+function differentiable at points where $f(x, y) = T$ and $T$ is some
+threshold. Let's calculate surface-surface function for this set at a point
+$(a, b)$. We find all intersections between a boundary $\Gamma$ and its
+translated version by solving a system of equations
 \begin{equation*}
   \left\{
   \begin{array}{l}
@@ -630,7 +630,7 @@ Take $N$ random values $a_i$, $b_i$ and $\sigma_i$. Let $f$ be
   f(x,y) = \sum_{i=1}^N \frac{1}{\sigma_i} \exp(\frac{-(x-a_i)^2-(y-b_i)^2}{\sigma_i^2})
 \end{equation*}
 Inequality $f(x,y) \le T$ defines a ``blob'' like one which can be seen on
-\cref{fig:blob}. We can use the algorithm developed in \cref{sec:cool-algo} to
+\cref{fig:blob}. We can use the algorithm developed in \cref{sec:fss-2d} to
 compute precise values of $F_{ss}$ for this blob and compare them with values
 obtained by using the fast algorithm in section \cref{sec:algo}. The result of
 this comparison is on \cref{fig:fss-blob}.
