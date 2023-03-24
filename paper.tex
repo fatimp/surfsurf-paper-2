@@ -433,14 +433,14 @@ next sections.
 Let $S$ be some set in $\mathbb{R}^2$ which has a smooth boundary $\Gamma$ in
 the sense that the boundary has a tangent line almost everywhere. Now we
 introduce a function $f_\Gamma(\bm{x}; \Delta)$:
-\begin{equation*}
+\begin{equation}
   f_\Gamma(\bm{x}; \Delta) = \left\{
   \begin{array}{ll}
     1/\Delta & \quad \rho(\bm{x}, \Gamma) < \Delta \\
     0 & \quad \text{otherwise}
   \end{array}
-  \right.
-\end{equation*}
+  \right. \label{eq:delta-sequence}
+\end{equation}
 Here $\rho(\bm{x}, \Gamma)$ means a closest distance from point $\bm{x}$ to the
 boundary $\Gamma$.
 
@@ -455,7 +455,7 @@ boundary $\Gamma$.
     their intersection.}
   \label{fig:fss-zoomed}
 \end{figure}
-Now define a functional sequence $F_{ss}(\bm{x}; \Delta)$:
+Now define a functional sequence $F_{ss}(\bm{r}; \Delta)$:
 \begin{align*}
   F_{ss}(\bm{r}; \Delta) &= \int\int f_\Gamma(\bm{x}; \Delta) f_\Gamma(\bm{x}
   + \bm{r}; \Delta) dx dy \\
@@ -481,8 +481,9 @@ A less illustrative but more practical way to calculate an expression
 $\frac{S_k}{\Delta}$ is the following. Take two vectors $\bm{a}$ and $\bm{b}$
 parallel to normals to $\Gamma$ and $\Gamma'$ in $k$-th point of their
 intersection such as $|a| = |b| = 1$. If $F_{ss}$ is defined at the point of
-consideration then $\bm{a} \ne k\bm{b}$. The pair $(a, b)$ may serve as a basis
-with the following transformation from the basis $(0,1), (1,0)$:
+consideration then $\bm{a} \ne \pm \bm{b}$. The pair $(\bm{a}, \bm{b})$ may
+serve as a basis with the following transformation from the basis
+$(1,0), (0,1)$:
 \begin{align*}
   x' &= f(x, y) = a_x x + a_y y \\
   y' &= g(x, y) = b_x x + b_y y
@@ -517,39 +518,90 @@ smooth boundary. Suppose a set $S$ is defined as
 $S = \left\{ (x, y) \ | \quad f(x, y) \le T \right\}$ where $f(x, y)$ is some
 function differentiable at points where $f(x, y) = T$ and $T$ is some
 threshold. Let's calculate surface-surface function for this set at a point
-$(a, b)$. We find all intersections between a boundary $\Gamma$ and its
-translated version by solving a system of equations
+$\bm{r} = (r_x, r_y)$. We find all intersections between a boundary $\Gamma$ and
+its translated version by solving a system of equations
 \begin{equation*}
   \left\{
   \begin{array}{l}
     f(x, y) = T \\
-    f(x-a, y-b) = T    
+    f(x-r_x, y-r_y) = T
   \end{array}
   \right.
 \end{equation*}
 which can be replaced by one equation
 \begin{equation}
-  (f(x, y) - T)^2 + (f(x-a, y-b) - T)^2 = 0 \label{eq:inter}
+  (f(x, y) - T)^2 + (f(x-r_x, y-r_y) - T)^2 = 0 \label{eq:inter}
 \end{equation}
 We denote a set of solutions of this equation as $X$. For every $\bm{x}_i \in X$
 we find normals to the boundary and the boundary translated by a vector
-$(a, b)$. These normals can be found using automatic differentiation and dual
+$\bm{r}$. These normals can be found using automatic differentiation and dual
 numbers described in \cref{sec:dual}. Then we normalize these normals (i.e. make
 their length equal to $1$) and use \cref{eq:fss-2d} to calculate $F_{ss}$.
 
-Summarizing, the algorithm of calculating $F_{ss}(a, b)$ is the following:
+Summarizing, the algorithm of calculating $F_{ss}(\bm{r})$ is the following:
 \begin{enumerate}
 \item Find $X$ which is a set of soulutions of \cref{eq:inter}.
 \item For all points in $X$ find normals to the boundaries using
-  \cref{eq:autonormals}.
-\item Calculate $F_{ss}(a, b)$ using \cref{eq:fss-2d}.
+  \cref{eq:autonormals} and normalize them.
+\item Calculate $F_{ss}(\bm{r})$ using \cref{eq:fss-2d}.
 \end{enumerate}
 
 The set $X$ can be found by firstly evaluating $f(x, y)$ in some regular grid
 searching for all points $(x_i, y_i)$ for which $|f(x_i, y_i) - T| < \epsilon$
-and $|f(x_i - a, y_i - b) - T| < \epsilon$ for some positive $\epsilon$
+and $|f(x_i - r_x, y_i - r_y) - T| < \epsilon$ for some positive $\epsilon$
 and then using these points as starting points for some algorithm based on
 gradient descent like ADAM to solve \cref{eq:inter}.
+
+\subsection{Surface-surface-surface function for three-dimensional sets with
+  smooth boundary}
+\label{sec:fsss-3d}
+Results of this section are made by analogy with \cref{sec:fss-2d}. Again, let
+$S$ be some set in $\mathbb{R}^3$ which has a smooth boundary, i.e. has a
+tangent plane at almost every point of its boundary. Using the function
+\cref{eq:delta-sequence} we define a functional sequence
+$F_{sss}(\bm{r_1}, \bm{r_2}; \Delta)$:
+\begin{align*}
+  F_{sss}(\bm{r_1}, \bm{r_2}; \Delta) &= \int\int\int dx dy dz \times \\
+  &\qquad \times f_\Gamma(\bm{x}; \Delta) f_\Gamma(\bm{x} + \bm{r_1}; \Delta)
+  f_\Gamma(\bm{x} + \bm{r_2}; \Delta) \\
+  &= \sum_{k=1}^N V_k/\Delta^3
+\end{align*}
+$V_k$ is a volume of parallelepiped where all three multiplicands under integral
+are non-zero. $N$ is a number of these parallelepipeds, i.e. number of points
+where all three boundaries (one ``original'' boundary and two translated
+versions) have an intersection. With $\Delta$ going to zero we get a convergence
+to $F_{sss}$:
+\begin{equation*}
+  \lim_{\Delta \to 0} F_{sss}(\bm{r_1}, \bm{r_2}; \Delta) = F_{sss}(\bm{r_1},
+  \bm{r_2})
+\end{equation*}
+
+Let $\bm{a}$, $\bm{b}$ and $\bm{c}$ be normalized normals to each boundary in
+the point of intersection. The corresponding $V_k$ is finite if and only if
+$\bm{a} \ne \pm \bm{b} \ne \pm \bm{c}$. In this case we can use a triplet
+$(\bm{a}, \bm{b}, \bm{c})$ as basis for $\mathbb{R}^3$ with the following
+transformation from the basis $(1,0,0), (0,1,0), (0, 0, 1)$:
+\begin{align*}
+  x' &= f(x, y) = a_x x + a_y y + a_z z \\
+  y' &= g(x, y) = b_x x + b_y y + b_z z \\
+  z' &= h(x, y) = c_x x + c_y y + c_z z \\
+\end{align*}
+Jacobian determinant for this transformation is
+\begin{equation*}
+  J = \left|
+  \begin{array}{ccc}
+    a_x & a_y & a_z \\
+    b_x & b_y & b_z \\
+    c_x & c_y & c_z \\
+  \end{array}
+  \right|
+\end{equation*}
+and the expression for $F_{sss}$ becomes
+\begin{equation}
+  F_{sss}(\bm{r_1}, \bm{r_2}) = \sum_{k=1}^N \frac{1}{|J_k|} \label{eq:fsss-3d}
+\end{equation}
+where $J_k$ is Jacobian determinant computed at $k$-th point of
+intersection.
 
 \section{Examples of two-dimensional sets with smooth boundary}
 \label{seq:examples}
