@@ -612,16 +612,17 @@ algorithm. We will use the filter $H$ (\ref{eq:filter-3x3-2d}) for edge
 detection along with a new filter $H'$ (\ref{eq:filter-5x5-2d}) described in
 \cref{sec:improvement}.
 
-\subsection{A square}
-Let's define a function $f(x, y) = \max(|x|, |y|)$. A set $f(x, y) \le T$ is a
-square with side $2T$. The function $f$ is differentiable at all points where
-$f(x, y) = T$ with exception of points $(-T, -T)$, $(-T, T)$, $(T, -T)$ and
-$(T, T)$. The surface-surface correlation function for a square is equal to:
+\subsection{A square and a cube}
+Define a function $f(\bm{x}) = \max\limits_i |x_i|$. A set $f(\bm{x}) \le T$
+where $\bm{x} \in \mathbb{R}^2$ is a square with side $2T$. The function $f$ is
+differentiable at all points where $f(\bm{x}) = T$ with exception of points
+$(-T, -T)$, $(-T, T)$, $(T, -T)$ and $(T, T)$. The surface-surface correlation
+function for a square is equal to:
 \begin{equation*}
-  F_{ss}(x, y) = \left\{
+  F_{ss}(\bm{r}) = \left\{
   \begin{array}{ll}
-    2 & \quad \max(|x|, |y|) < T \ \text{and}\ x\ne0, y\ne0 \\
-    0 & \quad \max(|x|, |y|) > T \\
+    2 & \quad f(\bm{r}) < 2T \ \text{and}\ r_i \ne 0, \forall i \in \overline{1,2} \\
+    0 & \quad f(\bm{r}) > 2T \\
     \text{undefined} & \quad \text{otherwise}
   \end{array}
   \right.
@@ -631,12 +632,30 @@ this case the algorithm described in \cref{sec:algo} gives a correct result in
 any point which is few pixels away from where $F_{ss}$ is undefined.
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\linewidth]{images/fss-square.png}
-  \caption[]{$F_{ss}$ function for a square with side $T$. The function is
-    undefined along red segments. Its value is $2$ inside a shaded area and $0$
-    outside.}
+  \includegraphics[width=0.45\linewidth]{images/fss-square.png}
+  \hfill
+  \includegraphics[width=0.45\linewidth]{images/fss-square-julia.png}
+  \caption[]{$F_{ss}$ function for a square with side $T = 0.3$. On the left:
+    Theoretical results. The function is undefined along red segments. Its value
+    is $2$ inside a shaded area and $0$ outside. On the right: Calculation with
+    the algorithm described in \cref{sec:algo}.}
   \label{fig:fss-square}
 \end{figure}
+
+A set $f(\bm{x}) \le T$ where $\bm{x} \in \mathbb{R}^3$ is a cube with the same
+side $2T$.
+The surface-surface-surface correlation function for this cube is equal to:
+\begin{equation*}
+  F_{sss}(\bm{r}) = \left\{
+  \begin{array}{ll}
+    2 & \quad f(\bm{r}) < 2T \ \text{and}\ r_i \ne 0, \forall i \in \overline{1,3} \\
+    0 & \quad f(\bm{r}) > 2T \\
+    \text{undefined} & \quad \text{otherwise}
+  \end{array}
+  \right.
+\end{equation*}
+This case is also handled good by the algorithm described in
+\cref{sec:algo}. \textcolor{red}{Any picture/plot here?}.
 
 \subsection{A disk}
 If we define $f(x, y) = x^2 + y^2$ then an inequation $f(x, y) \le R^2$ defines
