@@ -10,6 +10,8 @@
 \usepackage[export]{adjustbox}
 \usepackage{hyperref}
 \usepackage{cleveref}
+\usepackage[inline]{enumitem}
+\usepackage{resizegather}
 
 \definecolor{light-gray}{gray}{0.95}
 \newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
@@ -192,7 +194,7 @@ replaced with an angle $\theta$ between vectors $\bm{r_1}$ and $\bm{r_2}$:
 More detailed information on surface correlation functions can be found in
 \cref{sec:verify} and comprehensive Torquato's book \cite{Torquato_book}.
 
-\section{Algorithm for computation of surface functions}
+\section{Algorithm for computation of surface functions for digital images}
 \label{sec:algo}
 Here we briefly describe an algorithm for computation of surface-surface,
 surface-void and surface-surface-surface correlation functions for digital
@@ -205,32 +207,35 @@ We give an image of porous medium in the form of two- or three-dimensional bit
 array $A$ as the input to our algorithm. In the first stage, we convolve the
 input with high-pass filter to extract edges from the image. We use the
 following filter kernel $H$:
-\begin{align}
-  H_{ij} &= \frac{1}{6} \left[
-    \begin{array}{ccc}
-      1 & 1 & 1 \\
-      1 & -8 & 1 \\
-      1 & 1 & 1
-    \end{array}
-    \right] \label{eq:filter-3x3-2d} \\
-  H_{ijk} &= \frac{1}{18} \left[
-    \begin{array}{ccc}
-      1 & 1 & 1 \\
-      1 & 1 & 1 \\
-      1 & 1 & 1
-    \end{array} ;
-    \begin{array}{ccc}
-      1 & 1 & 1 \\
-      1 & -24 & 1 \\
-      1 & 1 & 1
-    \end{array} ;
-    \begin{array}{ccc}
-      1 & 1 & 1 \\
-      1 & 1 & 1 \\
-      1 & 1 & 1
-    \end{array}
-    \right] \label{eq:filter-3x3-3d}
-\end{align}
+\begin{equation}
+  \begin{aligned}
+    H_{ij} &= \frac{1}{6} \left[
+      \begin{array}{ccc}
+        1 & 1 & 1 \\
+        1 & -8 & 1 \\
+        1 & 1 & 1
+      \end{array}
+      \right] \\
+    H_{ijk} &= \frac{1}{18} \left[
+      \begin{array}{ccc}
+        1 & 1 & 1 \\
+        1 & 1 & 1 \\
+        1 & 1 & 1
+      \end{array} ;
+      \begin{array}{ccc}
+        1 & 1 & 1 \\
+        1 & -24 & 1 \\
+        1 & 1 & 1
+      \end{array} ;
+      \begin{array}{ccc}
+        1 & 1 & 1 \\
+        1 & 1 & 1 \\
+        1 & 1 & 1
+      \end{array}
+      \right]
+  \end{aligned}
+  \label{eq:filter-3x3}
+\end{equation}
 Here symbol $;$ denotes concatenation along the third dimension. Edge extraction
 is performed as follows:
 \begin{align*}
@@ -327,6 +332,61 @@ sampling pattern shown on \cref{fig:Fsss-pattern}
     $r_2$. Patterns can lie in planes $XY$ (as on the picture), $XZ$ or
     $YZ$. Black dots depict elements of $A'$}
   \label{fig:Fsss-pattern}
+\end{figure}
+
+In addition to filter $H$ we propose an improved filter $H'$. The rationale
+behind this improvement is that
+\begin{enumerate*}[label=\alph*)]
+\item A filter of width 3 is too narrow to give a good approximation for surface
+  functions.
+\item Filter $H$ is not invariant under rotations, i.e.
+  $H*\phi(A) \ne \phi(H*A)$ where $\phi$ is a rotation operator.
+\end{enumerate*}
+Filter $H'$ has a length $7$ and all coefficients with exception of the central
+coefficient are inversely proportional to the distance from the center:
+\begin{equation}
+  \begin{aligned}
+    H'_{ij} &= S \left\{
+    \begin{array}{cc}
+      \frac{1}{\sqrt{(i-3)^2 + (j-3)^2}} & \quad i \ne 3, j \ne 3 \\
+      C & \quad \text{otherwise}
+    \end{array}
+    \right. \\
+    H'_{ijk} &= S \left\{
+    \begin{array}{cc}
+      \frac{1}{\sqrt{(i-3)^2 + (j-3)^2 + (k-3)^3}} & \quad i \ne 3, j \ne 3, k
+      \ne 3 \\
+      C & \quad \text{otherwise}
+    \end{array}
+    \right.
+  \end{aligned}
+  \label{eq:filter-7x7}
+\end{equation}
+where $C$ is such that all coefficients of $H'$ sum to zero, and $S$ equals to
+$30.45849$ in 2D and $172.96232$ in 3D case.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/experiment-setup.png}
+  \caption[]{Left, center: images $A$ and $B$ used in the experiment for
+    approximation of $1 / \sin \phi$. Right: Interfaces between phases are
+    line segments which intersect each other at angle $\phi$. Shaded area is
+    where $|(H*A)\cdot(H*B)|$ has non-zero values. Sum of all values in this
+    area equals to $1 / \sin \phi$.}
+  \label{fig:experiment-setup}
+\end{figure}
+Take two 2D images like the ones on \cref{fig:experiment-setup}. Boundaries
+between black and white areas cross each other at the angle $\phi$. We apply a
+edge detection filter to each image, multiply results element-wise and sum all
+elements of the product. We want an obtained value to approximate
+$1/\sin \phi$. As can be seen on \cref{fig:filter-comparison} $H'$ does this job
+better than $H$. Why it's so important will be explained in the next section.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/filter-comparison.png}
+  \caption[]{Estimation of $1/\sin\phi$ by filters $H$ and $H'$ in the
+    experiment on \cref{fig:experiment-setup}.}
+  \label{fig:filter-comparison}
 \end{figure}
 
 From now on when considering $F_{ss}$ and $F_{sv}$ functions we will work with
@@ -474,7 +534,10 @@ acute angle between tangent lines. Hence, we get the following equation:
 \end{equation}
 It's easy to show that
 $\lim_{\Delta \to 0} f_\Gamma(\bm{x}; \Delta) = |\nabla \chi_A(\bm{x})|$
-and therefore \cref{eq:fss-2d-sin} and \cref{eq:fss} define the same function.
+and therefore \cref{eq:fss-2d-sin} and \cref{eq:fss} define the same
+function. This equation for $F_{ss}$ also explains why edge detection filters
+need to approximate $1/\sin \phi_k$ and why the filter \cref{eq:filter-7x7} is
+better than \cref{eq:filter-3x3}.
 
 A less illustrative but more practical way to calculate an expression
 $\frac{S_k}{\Delta}$ is the following. Take two vectors $\bm{a}$ and $\bm{b}$
@@ -607,9 +670,9 @@ intersection.
 In this section we will provide few examples of sets for which the developed
 precise algorithm is applicable and compare the surface-surface function
 calculated with the fast algorithm (\cref{sec:algo}) with results of the new
-algorithm. We will use the filter $H$ (\ref{eq:filter-3x3-2d}) for edge
-detection along with a new filter $H'$ (\ref{eq:filter-5x5-2d}) described in
-\cref{sec:improvement}.
+algorithm. We will use the filter $H$ (\ref{eq:filter-3x3}) for edge
+detection along with a new filter $H'$ (\ref{eq:filter-7x7}) proposed in this
+paper.
 
 \subsection{A square and a cube}
 Define a function $f(\bm{x}) = \max\limits_i |x_i|$. A set $f(\bm{x}) \le T$
@@ -771,80 +834,6 @@ comparison between two algorithms is on \cref{fig:fss-ellipses}.
     radius $R = 0.1$ and angle $\phi$ varying from $0$ to $\pi$. Resolution of
     the image varies from $500\times 500$ pixels to $3000\times 3000$.}
   \label{fig:fss-ellipses}
-\end{figure*}
-
-\section{Improvement of the fast algorithm}
-\label{sec:improvement}
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\linewidth]{images/experiment-setup.png}
-  \caption[]{Left, center: images $A$ and $B$ used in the experiment described
-    in \cref{sec:improvement}. Right: Interfaces between phases are line
-    segments which intersect each other at angle $\phi$. Shaded area is where
-    $(H*A)\cdot(H*B)$ has non-zero values.}
-  \label{fig:experiment-setup}
-\end{figure}
-Take two 2D images like the ones on \cref{fig:experiment-setup}. Boundaries
-between black and white cross each other at the angle $\phi$. We apply the
-filter $H$ (\cref{eq:filter-3x3-2d}) to each image, multiply results
-element-wise and sum all elements of the product. An obtained value must
-approximate $1/\sin \phi$ if we want $H$ to be suitable for calculation of
-surface-surface function. With filter described in \cref{sec:algo} we get a
-picture as on \cref{fig:angles-3x3}. We see that $H$ approximates
-$1/\sin \phi$ not very good.
-
-Now, let's try a wider filter $H'$:
-\begin{align}
-  H'_{ij} &= \frac{1}{30} \left[
-    \begin{array}{ccccc}
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & -24 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-    \end{array}
-    \right] \label{eq:filter-5x5-2d} \\
-  H'_{ijk} &= \frac{1}{150} \left[
-    \begin{array}{ccccc}
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-    \end{array} ;
-    \begin{array}{ccccc}
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & -124 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-    \end{array} ;
-    \begin{array}{ccccc}
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-      1 & 1 & 1 & 1 & 1 \\
-    \end{array}
-    \right] \label{eq:filter-5x5-3d}
-\end{align}
-With this filter we get a different picture (\cref{fig:angles-5x5}). A
-comparison of the fast algorithm with a wider filter kernel with a precise
-calculation for a ``blob'' described in \cref{sec:gauss} is show on
-\cref{fig:fss-blob-5x5}. A case with ellipses from \cref{sec:ellipses} is on
-\cref{fig:fss-ellipses-5x5}.
-\begin{figure*}[!hpt]
-  \centering
-  \subfigure[$3\times 3$ kernel $H$]{
-    \includegraphics[width=0.45\linewidth]{images/angles-3x3.png}
-    \label{fig:angles-3x3}}
-  \hfill
-  \subfigure[$5\times 5$ kernel $H'$]{
-    \includegraphics[width=0.45\linewidth]{images/angles-5x5.png}
-    \label{fig:angles-5x5}}
-  \caption[]{Estimation of $1/\sin\phi$ where $\phi$ is the angle between
-    tangent lines to the interface by filters $H$ and $H'$.}
-  \label{fig:angles}
 \end{figure*}
 
 \section{Results}
