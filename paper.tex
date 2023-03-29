@@ -204,8 +204,7 @@ consists of two stages: edge detection stage and computation of autocorrelation.
 We give an image of porous medium in the form of two- or three-dimensional bit
 array $A$ as the input to our algorithm. In the first stage, we convolve the
 input with high-pass filter to extract edges from the image. We use the
-following filter kernel $H$ \textcolor{red}{Is there notation for 3x3x3
-  ``matrices''?}:
+following filter kernel $H$:
 \begin{align}
   H_{ij} &= \frac{1}{6} \left[
     \begin{array}{ccc}
