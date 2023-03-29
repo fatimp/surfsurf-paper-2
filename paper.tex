@@ -657,10 +657,10 @@ The surface-surface-surface correlation function for this cube is equal to:
 This case is also handled good by the algorithm described in
 \cref{sec:algo}. \textcolor{red}{Any picture/plot here?}.
 
-\subsection{A disk}
-If we define $f(x, y) = x^2 + y^2$ then an inequation $f(x, y) \le R^2$ defines
-a disk of radius $R$ with center at the origin. In this case $F_{ss}$ depends
-only on distance $r$ from the origin:
+\subsection{A disk and a ball}
+Define $f(\bm{x}) = \sum_i x_i^2$. If $\bm{x} \in \mathbb{R}^2$ when an
+inequation $f(\bm{x}) \le R^2$ defines a disk of radius $R$ with the center at
+the origin. In this case $F_{ss}$ depends only on distance $r$ from the origin:
 \begin{equation*}
   F_{ss}(r) = \left\{
   \begin{array}{ll}
@@ -671,7 +671,7 @@ only on distance $r$ from the origin:
 \end{equation*}
 A comparison of the algorithm described in \cref{sec:algo} applied to images
 with different resolution with a theory is shown on \cref{fig:fss-disk}.
-\begin{figure*}[!pt]
+\begin{figure*}[!hpt]
   \centering
   \subfigure[$3\times 3$ kernel $H$]{
     \includegraphics[width=0.45\linewidth]{images/fss-disk-3x3.png}
@@ -684,6 +684,25 @@ with different resolution with a theory is shown on \cref{fig:fss-disk}.
     $R = 0.334$. Resolution of the image varies from $100\times 100$ pixels to
     $3100\times 3100$.}
   \label{fig:fss-disk}
+\end{figure*}
+
+If $\bm{x} \in \mathbb{R}^3$ then an inequation $f(\bm{x}) \le R^2$ defines a
+ball. In this case we provide a comparison (\cref{fig:fsss-ball}) of the
+algorithm in \cref{sec:algo} with the precise algorithm in
+\cref{sec:fsss-3d}. There is no known analytic solution for this case.
+\begin{figure*}[!hpt]
+  \centering
+  \includegraphics[width=0.45\linewidth]{images/ball-sss.png}
+  \hfill
+  \includegraphics[width=0.45\linewidth]{images/ball-sss-error.png}
+  \caption[]{On the left: Plot of $F_{sss}(\bm{r_1}, \bm{r_2})$ function
+    obtained by algorithm \cref{sec:algo} for a ball with radius
+    $R = 0.3$. $\bm{r_1}$ is parallel to a vector $\bm{i} = (1, 0, 0)$ and
+    $\bm{r_2}$ is parallel to a vector $\bm{j} = (0, 1, 0)$. Vectors $\bm{i}$
+    and $\bm{j}$ constitute a two dimensional parameter space for $F_{sss}$. On
+    the right: Relative error of computation. True values for $F_{sss}$ are
+    obtained by algorithm in \cref{sec:fsss-3d}.}
+  \label{fig:fsss-ball}
 \end{figure*}
 
 \subsection{Gaussian mixture}
@@ -705,7 +724,7 @@ Inequality $f(x,y) \le T$ defines a ``blob'' like one which can be seen on
 compute precise values of $F_{ss}$ for this blob and compare them with values
 obtained by using the fast algorithm in section \cref{sec:algo}. The result of
 this comparison is on \cref{fig:fss-blob}.
-\begin{figure*}[!pt]
+\begin{figure*}[!hpt]
   \centering
   \subfigure[$3\times 3$ kernel $H$]{
     \includegraphics[width=0.45\linewidth]{images/fss-blob-3x3.png}
@@ -739,7 +758,7 @@ with $a_ic_i - b_i^2 > 0$. Inequation
 \end{equation*}
 defines $N$ ellipses like those which can be seen on \cref{fig:ellipses}. A
 comparison between two algorithms is on \cref{fig:fss-ellipses}.
-\begin{figure*}[!pt]
+\begin{figure*}[!hpt]
   \centering
   \subfigure[$3\times 3$ kernel $H$]{
     \includegraphics[width=0.45\linewidth]{images/fss-ellipses-3x3.png}
@@ -815,7 +834,7 @@ comparison of the fast algorithm with a wider filter kernel with a precise
 calculation for a ``blob'' described in \cref{sec:gauss} is show on
 \cref{fig:fss-blob-5x5}. A case with ellipses from \cref{sec:ellipses} is on
 \cref{fig:fss-ellipses-5x5}.
-\begin{figure*}[!pt]
+\begin{figure*}[!hpt]
   \centering
   \subfigure[$3\times 3$ kernel $H$]{
     \includegraphics[width=0.45\linewidth]{images/angles-3x3.png}
@@ -870,5 +889,4 @@ our fast algorithm using these new cases. The fast algorithm was improved using
 a wider filter $H'$.
 
 \bibliography{paper}
-
 \end{document}
