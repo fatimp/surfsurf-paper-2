@@ -127,7 +127,7 @@ arbitrary structures (still described by some continuous function). The rest of
 the manuscript is organized as follows: in \cref{sec:def} we introduce some
 major definitions of CFs necessary for establishing algorithms, in
 \cref{sec:algo} we describe the all methodological details for "discrete" method
-for digital images. Next, in \cref{sec:verify} we explain in detail why
+for digital images. Next, in \cref{sec:algo-precise} we explain in detail why
 verification of computational approaches for digital images is currently
 hampered, and then introduce novel exact "continuous" methodology in
 \cref{sec:fss-2d}. The choice of verification cases is presented in
@@ -192,9 +192,9 @@ replaced with an angle $\theta$ between vectors $\bm{r_1}$ and $\bm{r_2}$:
 
 
 More detailed information on surface correlation functions can be found in
-\cref{sec:verify} and comprehensive Torquato's book \cite{Torquato_book}.
+\cref{sec:algo-precise} and comprehensive Torquato's book \cite{Torquato_book}.
 
-\section{Algorithm for computation of surface functions for digital images}
+\section{Computation of surface functions for digital images}
 \label{sec:algo}
 Here we briefly describe an algorithm for computation of surface-surface,
 surface-void and surface-surface-surface correlation functions for digital
@@ -397,14 +397,14 @@ will work with cubic images which have unit volume. Then we can also omit
 division by $N$ and ensemble average in \cref{eq:fsss} becomes a triple integral
 over a cube $[0, 1]^3$.
 
-\section{Problem of verification}
-\label{sec:verify}
-In paper \textcolor{red}{our paper} we tested these algorithms against known
-analytic solutions. Although we obtained acceptable results in the cases of
+\section{Computation of surface functions for sets with smooth boundary}
+\label{sec:algo-precise}
+In paper \textcolor{red}{our paper} we tested our algorithms for digital images
+against known analytic solutions. Although we obtained acceptable results in the cases of
 overlapping balls and disks, we were not sure if our algorithm performs good in
-general and searched for more test cases. Here we briefly discuss dual numbers
-and autodifferentiation technique and present another case: two- and
-three-dimensional sets with smooth boundary.
+general and searched for more test cases. Here we present another test case and
+develop an algorithm for calculation of $F_{ss}$ and $F_{sss}$ functions for
+two- and three-dimensional sets with smooth boundary.
 
 \subsection{Dual numbers and automatic differentiation}
 \label{sec:dual}
