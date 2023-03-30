@@ -668,8 +668,8 @@ intersection.
 \label{sec:results}
 In this section we will provide few examples of sets for which the developed
 precise algorithm is applicable and compare the surface-surface function
-calculated with the fast algorithm (\cref{sec:algo}) with results of the new
-algorithm. We will use the filter $H$ (\ref{eq:filter-3x3}) for edge
+calculated with the algorithm for digital images (\cref{sec:algo}) with results
+of the new algorithm. We will use the filter $H$ (\ref{eq:filter-3x3}) for edge
 detection along with a new filter $H'$ (\ref{eq:filter-7x7}) proposed in this
 paper.
 
@@ -783,8 +783,8 @@ Take $N$ random values $a_i$, $b_i$ and $\sigma_i$. Let $f$ be
 Inequality $f(x,y) \le T$ defines a ``blob'' like one which can be seen on
 \cref{fig:blob}. We can use the algorithm developed in \cref{sec:fss-2d} to
 compute precise values of $F_{ss}$ for this blob and compare them with values
-obtained by using the fast algorithm in section \cref{sec:algo}. The result of
-this comparison is on \cref{fig:fss-blob}.
+obtained by using the algorithm in section \cref{sec:algo}. The result of this
+comparison is on \cref{fig:fss-blob}.
 \begin{figure*}[!hpt]
   \centering
   \subfigure[$3\times 3$ kernel $H$]{
@@ -840,8 +840,8 @@ comparison between two algorithms is on \cref{fig:fss-ellipses}.
 \label{sec:summary}
 In this paper we develop an algorithm for precise calculation of surface-surface
 correlation function for two-dimensional sets with smooth boundary and checked
-our fast algorithm using these new cases. The fast algorithm was improved using
-a wider filter $H'$.
+our algorithm for digital images using these new cases. The algorithm was
+improved using a wider filter $H'$.
 
 \begin{figure}
   \centering
@@ -871,6 +871,9 @@ acceptance criterion developed in \textcolor{red}{cite our paper again} works
 also for $H'$, but sometimes it's possible to calculate a poor estimate of
 $F_{ss}$ using $H$ but not $H'$. Secondly, $H'$ behaves worse that $H$ in points
 of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
+
+An implementation of the precise algorithm for sets with smooth boundary is
+available on GitHub\cite{diff-boundary-corrfn}.
 
 \bibliography{paper}
 \end{document}
