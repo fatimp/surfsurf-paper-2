@@ -131,9 +131,8 @@ for digital images. Next, in \cref{sec:algo-precise} we explain in detail why
 verification of computational approaches for digital images is currently
 hampered, and then introduce novel exact "continuous" methodology in
 \cref{sec:fss-2d}. The choice of verification cases is presented in
-\textcolor{red}{Fix reference} followed by improvements in methodology of
-Samarin et al. The paper concludes with discussion, outline and summary in
-\cref{sec:summary}.
+\cref{sec:results} followed by improvements in methodology of Samarin et~al. The
+paper concludes with discussion, outline and summary in \cref{sec:summary}.
 
 \section{Definitions}
 \label{sec:def}
@@ -665,8 +664,8 @@ and the expression for $F_{sss}$ becomes
 where $J_k$ is Jacobian determinant computed at $k$-th point of
 intersection.
 
-\section{Examples of two-dimensional sets with smooth boundary}
-\label{seq:examples}
+\section{Results}
+\label{sec:results}
 In this section we will provide few examples of sets for which the developed
 precise algorithm is applicable and compare the surface-surface function
 calculated with the fast algorithm (\cref{sec:algo}) with results of the new
@@ -836,7 +835,14 @@ comparison between two algorithms is on \cref{fig:fss-ellipses}.
   \label{fig:fss-ellipses}
 \end{figure*}
 
-\section{Results}
+\section{Conclusion}
+% Is this a right label?
+\label{sec:summary}
+In this paper we develop an algorithm for precise calculation of surface-surface
+correlation function for two-dimensional sets with smooth boundary and checked
+our fast algorithm using these new cases. The fast algorithm was improved using
+a wider filter $H'$.
+
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{images/ball-3d-ss.png}
@@ -856,10 +862,8 @@ calculating
       F_{ss}^{theory}(x_i))^2}{\sum_i F_{ss}^{theory}(x_i)^2}}
 \end{equation*}
 where $x_i$ belong to a set
-$(\epsilon, 2R - \epsilon) \cup (2R + \epsilon, 1)$ (here we assume image
-dimensions to be $1 \times 1 \times 1$ length units). Taking
-$\epsilon = 0.01$ we get $error = 0.006$ for filter $H$ and $error = 0.00017$
-for filter $H'$.
+$(\epsilon, 2R - \epsilon) \cup (2R + \epsilon, 1)$. Taking $\epsilon = 0.01$ we
+get $error = 0.006$ for filter $H$ and $error = 0.00017$ for filter $H'$.
 
 Unfortunately the filter $H'$ has some drawbacks in comparison with $H$. Firstly
 $H$ has faster convergence with increase of image resolution. Our
@@ -867,14 +871,6 @@ acceptance criterion developed in \textcolor{red}{cite our paper again} works
 also for $H'$, but sometimes it's possible to calculate a poor estimate of
 $F_{ss}$ using $H$ but not $H'$. Secondly, $H'$ behaves worse that $H$ in points
 of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
-
-\section{Conclusion}
-% Is this a right label?
-\label{sec:summary}
-In this paper we develop an algorithm for precise calculation of surface-surface
-correlation function for two-dimensional sets with smooth boundary and checked
-our fast algorithm using these new cases. The fast algorithm was improved using
-a wider filter $H'$.
 
 \bibliography{paper}
 \end{document}
