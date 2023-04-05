@@ -843,13 +843,10 @@ comparison between two algorithms is on \cref{fig:fss-ellipses}.
   \label{fig:fss-ellipses}
 \end{figure*}
 
-\section{Conclusion}
-% Is this a right label?
-\label{sec:summary}
-In this paper we develop an algorithm for precise calculation of surface-surface
-correlation function for two-dimensional sets with smooth boundary and checked
-our algorithm for digital images using these new cases. The algorithm was
-improved using a wider filter $H'$.
+\subsection{Influence of filter $H'$ on cases not covered by the new algorithm}
+In this section we show how filter $H'$ affects calculation of surface-functions
+in cases not covered by the algorithm described in \cref{sec:fss-2d} and
+\cref{sec:fsss-3d}.
 
 \begin{figure}
   \centering
@@ -879,6 +876,16 @@ acceptance criterion developed in \textcolor{red}{cite our paper again} works
 also for $H'$, but sometimes it's possible to calculate a poor estimate of
 $F_{ss}$ using $H$ but not $H'$. Secondly, $H'$ behaves worse that $H$ in points
 of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
+
+\section{Conclusion}
+% Is this a right label?
+\label{sec:summary}
+In this paper we develop an algorithm for precise calculation of $F_{ss}$
+function for two-dimensional sets and $F_{sss}$ function for three-dimensional
+sets. These sets must have smooth boundary for the algorithm to be
+applicable. With help of this algorithm we introduce some new test cases and
+check our algorithm for digital images more thoroughly. The algorithm is
+improved using a wider filter $H'$.
 
 An implementation of the precise algorithm for sets with smooth boundary is
 available on GitHub\cite{diff-boundary-corrfn}.
