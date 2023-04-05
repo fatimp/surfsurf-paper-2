@@ -26,6 +26,6 @@ for side in range(500, 3500, 500):
 plt.plot(phi, data_def[:, 0], linewidth = 1.2)
 plt.xlabel('$\phi$')
 plt.ylabel('$F_{ss}(R, \phi)$')
-plt.ylim([1,13])
+plt.ylim([0, 45])
 plt.legend(legend + ['Precise'])
-plt.savefig('../images/fss-blob-3x3.png')
+plt.savefig('../images/fss-blob-7x7.png', bbox_inches = 'tight')
