@@ -849,15 +849,28 @@ In this section we show how filter $H'$ affects calculation of surface-functions
 in cases not covered by the algorithm described in \cref{sec:fss-2d} and
 \cref{sec:fsss-3d}.
 
-\begin{figure}
+\begin{figure*}
   \centering
-  \includegraphics[width=\linewidth]{images/ball-3d-ss.png}
-  \caption[]{Surface-surface function calculated for a three-dimensional ball
-    with radius $R = 0.24$ using filters $H$ and $H'$. Theoretical curve is
-    provided for a comparison. Image dimensions are $450 \times 450 \times 450$.}
-  \label{fig:fss-ball}
-\end{figure}
-With the new filter calculation of $F_{ss}$ becomes more precise, even for
+  \subfigure[Surface-surface function calculated for a ball with radius
+    $R = 0.24$. Image dimensions are  $450 \times 450 \times 450$.]{
+    \includegraphics[width=0.3\linewidth]{images/ball-3d-ss.png}
+    \label{fig:fss-ball}}
+  \hfill
+  \subfigure[Surface-void function calculated for a disk with radius
+    $R = 0.2$. Image dimensions are $2000 \times 2000$.]{
+    \includegraphics[width=0.3\linewidth]{images/fsv-disk.png}
+    \label{fig:fsv-disk}}
+  \hfill
+  \subfigure[Surface-void function calculated for a ball with radius
+    $R = 0.2$. Image dimensions are $300 \times 300 \times 300$.]{
+    \includegraphics[width=0.3\linewidth]{images/fsv-ball.png}
+    \label{fig:fsv-ball}}
+  \caption[]{Comparison of filters $H$ and $H'$ for cases in which newly
+    developed algorithms \cref{sec:fss-2d}, \cref{sec:fsss-3d} are not
+    applicable. Theoretical curves are provided for each case.}
+  \label{fig:not-covered}
+\end{figure*}
+With the new filter calculation of $F_{ss}$ becomes more precise also for
 three-dimensional images. This can be seen in comparison with theoretical values
 for known cases like the one of a ball. On \cref{fig:fss-ball} there are plots
 of $F_{ss}$ function calculated with filters $H$ and $H'$ along with a
@@ -869,7 +882,9 @@ calculating
 \end{equation*}
 where $x_i$ belong to a set
 $(\epsilon, 2R - \epsilon) \cup (2R + \epsilon, 1)$. Taking $\epsilon = 0.01$ we
-get $error = 0.006$ for filter $H$ and $error = 0.00017$ for filter $H'$.
+get $error = 0.006$ for filter $H$ and $error = 0.00017$ for filter
+$H'$. Calculation of surface-void function also benefits from the new filter
+(\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
 
 Unfortunately the filter $H'$ has some drawbacks in comparison with $H$. Firstly
 $H$ has faster convergence with increase of image resolution. Our
