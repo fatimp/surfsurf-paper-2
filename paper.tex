@@ -21,14 +21,14 @@
 
 \author{Vasily Postnicov\textsuperscript{1}}
 \author{Marina V. Karsanina\textsuperscript{1}}
-\author{Aleksey Khlyupin\textsuperscript{1}}
+\author{Aleksey Khlyupin\textsuperscript{1,2}}
 \author{Kirill M. Gerke\textsuperscript{1}}
 \email{kg@ifz.ru}
 
 \affiliation{\textsuperscript{1}Schmidt Institute of Physics of the Earth of
   Russian Academy of Sciences, Moscow, 107031, Russia}
-%\affiliation{\textsuperscript{2}Computational Mathematics and Cybernetics,
-%  Lomonosov Moscow State University, Moscow, 119991, Russia}
+\affiliation{\textsuperscript{2}Moscow Institute of Physics and Technology,
+  Dolgoprudny, 141701, Russia}
 %\affiliation{\textsuperscript{3}Oil and Gas Research Institute Russian Academy
 %  of Sciences (OGRI RAS) 3, Gubkina st., Moscow, 119333, Russian Federation}
 
@@ -168,7 +168,7 @@ In case correlation functions are computed in predefined directions, scalar
 values can be also used for anisotropic structures
 \cite{jiao2014chawla,EPL1}. These functions are defined for media with
 dimensionality of 2 and higher. $F_{sv}$ is a physical quantity inversely
-proportional to length and $F_{ss}$ is inversionaly proportional to surface
+proportional to length and $F_{ss}$ is inversely proportional to surface
 area. SI units of measurement for these functions are $m^{-1}$ for $F_{sv}$
 and $m^{-2}$ for $F_{ss}$. In practice non-standard units of measurement can be
 used instead.
@@ -183,7 +183,7 @@ $F_{sss}$. It is defined as follows:
 \end{equation}
 This function is defined for media with dimensionality 3 or higher and is a
 physical quantity inversely proportional to volume. SI units for $F_{sss}$ are
-$m^{-3}$ but other units can be used in practice. For three-dimensional media
+$m^{-3}$, but relative units can be used in practice. For three-dimensional media
 $F_{sss}$ is a function of six scalar arguments:
 $\bm{r_1} = (r_{1x}, r_{1y}, r_{1z})$ and $\bm{r_2} = (r_{2x}, r_{2y}, r_{2z})$.
 However if the medium under consideration is isotropic, only three scalar
@@ -200,16 +200,16 @@ More detailed information on surface correlation functions can be found in
 
 \section{Computation of surface functions for digital images}
 \label{sec:algo}
-Here we briefly describe an algorithm for computation of surface-surface,
+Here we briefly describe the algorithm for computation of surface-surface,
 surface-void and surface-surface-surface correlation functions for digital
-images of porous media. A more detailed description can be found in a paper of
+images of porous media. A more detailed description can be found in the recent paper of
 Samarin et~al. \textcolor{red}{cite paper} This algorithm can calculate surface
 correlation functions for all possible directions and correlation lengths. It
-consists of two stages: edge detection stage and computation of autocorrelation.
+consists of two steps: edge detection and computation of autocorrelation.
 
-We give an image of porous medium in the form of two- or three-dimensional bit
+We consider an image of porous medium in the form of two- or three-dimensional bit
 array $A$ as the input to our algorithm. In the first stage, we convolve the
-input with high-pass filter to extract edges from the image. We use the
+input with high-pass filter to extract edges from the image. In our previous paper \cite{Samarin} we used the
 following filter kernel $H$:
 \begin{equation}
   \begin{aligned}
@@ -255,7 +255,7 @@ image $A$ and can be performed using Fourier transform:
 \end{equation*}
 Here $F$ is a forward Fourier transform and $F^{-1}$ is its inverse.
 
-In the second stage we calculate autocorrelation for $A'$ and divide it by a
+Next, we calculate autocorrelation for $A'$ and divide it by a
 total number of elements in $A$:
 \begin{align*}
   F_{{ss}_{lm}} &= \frac{1}{N} \sum_i \sum_j A'_{ij}A'_{i+l, j+m} \quad
@@ -269,7 +269,7 @@ properties of Fourier transform (here $\hat{f}(z) = F[f(x)]$):
   F[f(x) \star f(x)] = F[f(x) * f(-x)] = \hat{f}(z)\overline{\hat{f}(z)} = |\hat{f}(z)|^2
 \end{equation*}
 
-All in all we get the following algorithm for calculation of $F_{ss}$ function:
+Putting everything together, we obtain the following algorithm for calculation of $F_{ss}$ function:
 \begin{algorithmic}[1]
   \Procedure{surfsurf}{$A$}
   \State $A' \gets |H*A|$
@@ -281,7 +281,7 @@ All in all we get the following algorithm for calculation of $F_{ss}$ function:
   \EndProcedure
 \end{algorithmic}
 
-Algorithm for surface-void function $F_{sv}$ is similar:
+Algorithm for surface-void function $F_{sv}$ computation is similar:
 \begin{algorithmic}[1]
   \Procedure{surfvoid}{$A$}
   \State $A' \gets |H*A|$
@@ -297,16 +297,15 @@ Algorithm for surface-void function $F_{sv}$ is similar:
   \EndProcedure
 \end{algorithmic}
 
-A result $R_{ij}$ (resp. $R_{ijk}$) of either of two algorithms is an array of
+The results of either of two algorithms is an array of
 the same shape as $A$ which contains values of correlation function for the
 vector $r = (i, j)$ (resp. $r = (i, j, k)$). This result can be averaged over
 all directions if needed.
 
-For surface-surface-surface function $F_{sss}$ the former approach can also be
-used, but it would be highly inefficient memory-wise because for three
-dimensional case $F_{sss}$ is a function of six scalar coordinates which leads
-to a very large output array. Instead of this approach we use a slower approach
-which computes $F_{sss}$ at a specified point calculating a convolution using
+For surface-surface-surface function $F_{sss}$ the previously described approach can also be
+used, but it results in inefficient memory usage because for three-dimensional case $F_{sss}$ is a function of six scalar coordinates, which leads
+to a very large output array. Therefore, instead we use a somewhat slower, but more memory efficient, approach
+that computes $F_{sss}$ at a specified point calculating a convolution using
 its definition:
 \begin{algorithmic}[1]
   \Procedure{surfsurfsurf}{$A$, $\bm{r_1}$, $\bm{r_2}$}
@@ -339,15 +338,15 @@ sampling pattern shown on \cref{fig:Fsss-pattern}
   \label{fig:Fsss-pattern}
 \end{figure}
 
-In addition to filter $H$ we propose an improved filter $H'$. The rationale
-behind this improvement is that
+In this work, in addition to filter $H$, we propose an improved filter $H'$. The rationale
+behind this improvement is that:
 \begin{enumerate*}[label=\alph*)]
-\item A filter of width 3 is too narrow to give a good approximation for surface
-  functions.
-\item Filter $H$ is not invariant under rotations, i.e.
-  $H*\phi(A) \ne \phi(H*A)$ where $\phi$ is a rotation operator.
+\item a filter of width 3 is too narrow to give a good approximation for surface
+  functions;
+\item filter $H$ is not invariant under rotations, i.e.
+  $H*R(A) \ne R(H*A)$, where $R$ is a rotation operator.
 \end{enumerate*}
-Filter $H'$ has a length $7$ and all coefficients with exception of the central
+Filter $H'$ has a length $7$ and all coefficients with exception to the central
 coefficient are inversely proportional to the distance from the center:
 \begin{equation}
   \begin{aligned}
@@ -385,12 +384,11 @@ between black and white areas cross each other at the angle $\phi$. We apply an
 edge detection filter to each image, multiply results element-wise and sum all
 elements of the product. We want an obtained value to approximate
 $1/\sin \phi$. As can be seen on \cref{fig:filter-comparison} $H'$ does this job
-better than $H$. Why it's so important will be explained in the next section.
+better than $H$. Why this is important will be explained in the next section.
 \begin{figure}
   \centering
   \includegraphics[width=0.8\linewidth]{images/filter-comparison.png}
-  \caption[]{Estimation of $1/\sin\phi$ by filters $H$ and $H'$ in the
-    experiment on \cref{fig:experiment-setup}.}
+  \caption[]{Estimation of $1/\sin\phi$ by filters $H$ and $H'$ for binary images on \cref{fig:experiment-setup}.}
   \label{fig:filter-comparison}
 \end{figure}
 
@@ -403,14 +401,14 @@ will work with cubic images with side equal to $1\ cu$. Then we can also omit
 division by $N$ and ensemble average in \cref{eq:fsss} becomes a triple integral
 over a cube $[0, 1]^3$. On plots of surface functions we will omit units of
 measurements in captions (e.g. we will write ``$F_{ss}$'' instead of
-``$F_{ss}, cu^{-2}$''). 
+``$F_{ss}, cu^{-2}$'').
 
 \section{Computation of surface functions for sets with smooth boundary}
 \label{sec:algo-precise}
 In paper \textcolor{red}{our paper} we tested our algorithms for digital images
-against known analytic solutions. Although we obtained acceptable results in the cases of
-overlapping balls and disks, we were not sure if our algorithm performs good in
-general and searched for more test cases. Here we present another test case and
+against known analytic solutions. Although we obtained good results in the cases of
+overlapping balls and disks, weather our algorithm performs with the same high accuracy in
+general was still a question. In this section we present additional test case and
 develop an algorithm for calculation of $F_{ss}$ and $F_{sss}$ functions for
 two- and three-dimensional sets with smooth boundary.
 
@@ -424,8 +422,8 @@ multiplication works according to the following law:
 \end{equation*}
 It's easy to see that $D$ is commutative.
 
-It's useful to introduce an imaginary unit $\varepsilon$ and write a dual number
-$(a, b)$ as $a + b\varepsilon$. As you can see from multiplication law,
+It is also useful to introduce an imaginary unit $\varepsilon$ and write a dual number
+$(a, b)$ as $a + b\varepsilon$. As follows from the multiplication law,
 $1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
 integral domain and division is defined only if divisor has non-zero real part:
 \begin{align*}
@@ -456,8 +454,7 @@ $a$ is some point at which $f$ is differentiable):
   &= f(x) + yf'(x)\varepsilon
 \end{align*}
 
-Here are some basic rules for working with dual numbers (some of which we have
-already described):
+Most useful basic rules for working with dual numbers can be summarized as follows:
 \begin{itemize}
 \item $(a + b\varepsilon) + (c + d\varepsilon) = (a + c) + (b + d)\varepsilon$
 \item $(a + b\varepsilon) (c + d\varepsilon) = ac + (ad + bc)\varepsilon$
@@ -468,7 +465,7 @@ already described):
 \item $\tan(a + b\varepsilon) = \tan(a) - \frac{b}{cos^2(a)}\varepsilon$
 \end{itemize}
 
-As you can see, dual numbers are connected with differentiation. Using a dual
+As is evident from these rules, dual numbers are connected with differentiation. Using a dual
 argument $a + \varepsilon$ we can compute a value of a function at point $x = a$
 and its derivative at that point:
 $f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also we can compute a partial
@@ -482,7 +479,7 @@ derivative of a multivariate function. For example:
   \end{aligned}
   \label{eq:autonormals}
 \end{equation}
-The last equation will be useful for computation of normals to the interface in
+This last equation will be useful for computation of normals to the interface in
 next sections.
 
 \subsection{Surface-surface function for two-dimensional sets with smooth boundary}
@@ -533,16 +530,16 @@ vector $\bm{r}$ and $S_k$ is a surface of each such intersection (see
 \cref{fig:Fss-explained}).
 When $\Delta$ tends to zero, the boundary at the point of intersection can
 be replaced with a tangent line at the point of intersection
-(\cref{fig:fss-zoomed}). We get an expression for a surface of
+(\cref{fig:fss-zoomed}). Thus, we get an expression for a surface of
 intersection: $S_k = \frac{\Delta^2}{\sin \phi_k}$ where $\phi_k$ is an
-acute angle between tangent lines. Hence, we get the following equation:
+acute angle between tangent lines. Hence, we obtain the following equation:
 \begin{equation}
   F_{ss}(\bm{r}) = \lim_{\Delta \to 0} F_{ss}(\bm{r}; \Delta) =
   \sum_{k=1}^N \frac{1}{\sin \phi_k} \label{eq:fss-2d-sin}
 \end{equation}
 It's easy to show that
 $\lim_{\Delta \to 0} f_\Gamma(\bm{x}; \Delta) = |\nabla \chi_A(\bm{x})|$
-and therefore \cref{eq:fss-2d-sin} and \cref{eq:fss} define the same
+and, therefore, \cref{eq:fss-2d-sin} and \cref{eq:fss} define the same
 function. This equation for $F_{ss}$ also explains why edge detection filters
 need to approximate $1/\sin \phi_k$ and why the filter \cref{eq:filter-7x7} is
 better than \cref{eq:filter-3x3}.
@@ -559,7 +556,7 @@ $(1,0), (0,1)$:
   y' &= g(x, y) = b_x x + b_y y
 \end{align*}
 where $\bm{a} = (a_x, a_y)$, $\bm{b} = (b_x, b_y)$. Jacobian determinant for
-this transformation is
+this transformation is:
 \begin{equation*}
   J = \left|
   \begin{array}{cc}
@@ -575,7 +572,7 @@ this transformation is
   \right| = a_x b_y - a_y b_x
 \end{equation*}
 
-We can rewritte \cref{eq:fss-2d-sin} using $J$ as follows:
+We can rewrite \cref{eq:fss-2d-sin} using $J$ as follows:
 \begin{equation}
   F_{ss}(\bm{r}) = \sum_{k=1}^N \frac{1}{|J_k|} \label{eq:fss-2d}
 \end{equation}
@@ -589,7 +586,7 @@ $S = \left\{ (x, y) \ | \quad f(x, y) \le T \right\}$ where $f(x, y)$ is some
 function differentiable at points where $f(x, y) = T$ and $T$ is some
 threshold. Let's calculate surface-surface function for this set at a point
 $\bm{r} = (r_x, r_y)$. We find all intersections between a boundary $\Gamma$ and
-its translated version by solving a system of equations
+its translated version by solving a system of equations:
 \begin{equation*}
   \left\{
   \begin{array}{l}
@@ -598,7 +595,7 @@ its translated version by solving a system of equations
   \end{array}
   \right.
 \end{equation*}
-which can be replaced by one equation
+which can now be replaced by a single equation:
 \begin{equation}
   (f(x, y) - T)^2 + (f(x-r_x, y-r_y) - T)^2 = 0 \label{eq:inter}
 \end{equation}
@@ -618,9 +615,10 @@ Summarizing, the algorithm of calculating $F_{ss}(\bm{r})$ is the following:
 
 The set $X$ can be found by firstly evaluating $f(x, y)$ in some regular grid
 searching for all points $(x_i, y_i)$ for which $|f(x_i, y_i) - T| < \epsilon$
-and $|f(x_i - r_x, y_i - r_y) - T| < \epsilon$ for some positive $\epsilon$
+and $|f(x_i - r_x, y_i - r_y) - T| < \epsilon$ for some positive $\epsilon$ 
+(small value does not affect computation results, $\epsilon=0.04$ was used in all cases in this work)
 and then using these points as starting points for some algorithm based on
-gradient descent like ADAM to solve \cref{eq:inter}.
+gradient descent (ADAM \cite{adam} was used in this work) to solve \cref{eq:inter}.
 
 \subsection{Surface-surface-surface function for three-dimensional sets with
   smooth boundary}
@@ -636,7 +634,7 @@ $F_{sss}(\bm{r_1}, \bm{r_2}; \Delta)$:
   f_\Gamma(\bm{x} + \bm{r_2}; \Delta) \\
   &= \sum_{k=1}^N V_k/\Delta^3
 \end{align*}
-$V_k$ is a volume of parallelepiped where all three multiplicands under integral
+where $V_k$ is a volume of parallelepiped where all three multiplicands under integral
 are non-zero. $N$ is a number of these parallelepipeds, i.e. number of points
 where all three boundaries (one ``original'' boundary and two translated
 versions) have an intersection. With $\Delta$ going to zero we get a convergence
@@ -656,7 +654,7 @@ transformation from the basis $(1,0,0), (0,1,0), (0, 0, 1)$:
   y' &= g(x, y) = b_x x + b_y y + b_z z \\
   z' &= h(x, y) = c_x x + c_y y + c_z z \\
 \end{align*}
-Jacobian determinant for this transformation is
+The Jacobian determinant for this transformation is:
 \begin{equation*}
   J = \left|
   \begin{array}{ccc}
@@ -666,7 +664,7 @@ Jacobian determinant for this transformation is
   \end{array}
   \right|
 \end{equation*}
-and the expression for $F_{sss}$ becomes
+and the expression for $F_{sss}$ becomes:
 \begin{equation}
   F_{sss}(\bm{r_1}, \bm{r_2}) = \sum_{k=1}^N \frac{1}{|J_k|} \label{eq:fsss-3d}
 \end{equation}
