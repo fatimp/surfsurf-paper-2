@@ -150,7 +150,8 @@ defined as follows:
 
 Now we define two disjoint sets in a homogeneous porous medium: a set of solid
 phase $S$ and a set of void phase $V$. Surface-surface correlation function
-$F_{ss}$ and surface-void correlation function $F_{sv}$ are then defined as follows:
+$F_{ss}$ and surface-void correlation function $F_{sv}$ are then defined as
+follows:
 \begin{align}
   F_{ss}(\bm{r}) &= \langle |\nabla \chi_S(\bm{x})| |\nabla \chi_S(\bm{x} +
   \bm{r})| \rangle \label{eq:fss} \\
@@ -202,15 +203,16 @@ More detailed information on surface correlation functions can be found in
 \label{sec:algo}
 Here we briefly describe the algorithm for computation of surface-surface,
 surface-void and surface-surface-surface correlation functions for digital
-images of porous media. A more detailed description can be found in the recent paper of
-Samarin et~al. \textcolor{red}{cite paper} This algorithm can calculate surface
-correlation functions for all possible directions and correlation lengths. It
-consists of two steps: edge detection and computation of autocorrelation.
+images of porous media. A more detailed description can be found in the recent
+paper of Samarin et~al. \textcolor{red}{cite paper} This algorithm can calculate
+surface correlation functions for all possible directions and correlation
+lengths. It consists of two steps: edge detection and computation of
+autocorrelation.
 
 We consider an image of porous medium in the form of two- or three-dimensional bit
 array $A$ as the input to our algorithm. In the first stage, we convolve the
-input with high-pass filter to extract edges from the image. In our previous paper \cite{Samarin} we used the
-following filter kernel $H$:
+input with high-pass filter to extract edges from the image. In our previous
+paper \cite{Samarin} we used the following filter kernel $H$:
 \begin{equation}
   \begin{aligned}
     H_{ij} &= \frac{1}{6} \left[
@@ -269,7 +271,8 @@ properties of Fourier transform (here $\hat{f}(z) = F[f(x)]$):
   F[f(x) \star f(x)] = F[f(x) * f(-x)] = \hat{f}(z)\overline{\hat{f}(z)} = |\hat{f}(z)|^2
 \end{equation*}
 
-Putting everything together, we obtain the following algorithm for calculation of $F_{ss}$ function:
+Putting everything together, we obtain the following algorithm for calculation
+of $F_{ss}$ function:
 \begin{algorithmic}[1]
   \Procedure{surfsurf}{$A$}
   \State $A' \gets |H*A|$
@@ -302,11 +305,12 @@ the same shape as $A$ which contains values of correlation function for the
 vector $r = (i, j)$ (resp. $r = (i, j, k)$). This result can be averaged over
 all directions if needed.
 
-For surface-surface-surface function $F_{sss}$ the previously described approach can also be
-used, but it results in inefficient memory usage because for three-dimensional case $F_{sss}$ is a function of six scalar coordinates, which leads
-to a very large output array. Therefore, instead we use a somewhat slower, but more memory efficient, approach
-that computes $F_{sss}$ at a specified point calculating a convolution using
-its definition:
+For surface-surface-surface function $F_{sss}$ the previously described approach
+can also be used, but it results in inefficient memory usage because for
+three-dimensional case $F_{sss}$ is a function of six scalar coordinates, which
+leads to a very large output array. Therefore, instead we use a somewhat slower,
+but more memory efficient, approach that computes $F_{sss}$ at a specified point
+calculating a convolution using its definition:
 \begin{algorithmic}[1]
   \Procedure{surfsurfsurf}{$A$, $\bm{r_1}$, $\bm{r_2}$}
   \State $A' \gets |H*A|$
@@ -338,8 +342,8 @@ sampling pattern shown on \cref{fig:Fsss-pattern}
   \label{fig:Fsss-pattern}
 \end{figure}
 
-In this work, in addition to filter $H$, we propose an improved filter $H'$. The rationale
-behind this improvement is that:
+In this work, in addition to filter $H$, we propose an improved filter $H'$. The
+rationale behind this improvement is that:
 \begin{enumerate*}[label=\alph*)]
 \item a filter of width 3 is too narrow to give a good approximation for surface
   functions;
@@ -388,7 +392,8 @@ better than $H$. Why this is important will be explained in the next section.
 \begin{figure}
   \centering
   \includegraphics[width=0.8\linewidth]{images/filter-comparison.png}
-  \caption[]{Estimation of $1/\sin\phi$ by filters $H$ and $H'$ for binary images on \cref{fig:experiment-setup}.}
+  \caption[]{Estimation of $1/\sin\phi$ by filters $H$ and $H'$ for binary
+    images on \cref{fig:experiment-setup}.}
   \label{fig:filter-comparison}
 \end{figure}
 
@@ -407,10 +412,10 @@ measurements in captions (e.g. we will write ``$F_{ss}$'' instead of
 \label{sec:algo-precise}
 In paper \textcolor{red}{our paper} we tested our algorithms for digital images
 against known analytic solutions. Although we obtained good results in the cases of
-overlapping balls and disks, weather our algorithm performs with the same high accuracy in
-general was still a question. In this section we present additional test case and
-develop an algorithm for calculation of $F_{ss}$ and $F_{sss}$ functions for
-two- and three-dimensional sets with smooth boundary.
+overlapping balls and disks, weather our algorithm performs with the same high
+accuracy in general was still a question. In this section we present additional
+test case and develop an algorithm for calculation of $F_{ss}$ and $F_{sss}$
+functions for two- and three-dimensional sets with smooth boundary.
 
 \subsection{Dual numbers and automatic differentiation}
 \label{sec:dual}
@@ -422,8 +427,8 @@ multiplication works according to the following law:
 \end{equation*}
 It's easy to see that $D$ is commutative.
 
-It is also useful to introduce an imaginary unit $\varepsilon$ and write a dual number
-$(a, b)$ as $a + b\varepsilon$. As follows from the multiplication law,
+It is also useful to introduce an imaginary unit $\varepsilon$ and write a dual
+number $(a, b)$ as $a + b\varepsilon$. As follows from the multiplication law,
 $1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
 integral domain and division is defined only if divisor has non-zero real part:
 \begin{align*}
@@ -465,9 +470,9 @@ Most useful basic rules for working with dual numbers can be summarized as follo
 \item $\tan(a + b\varepsilon) = \tan(a) - \frac{b}{cos^2(a)}\varepsilon$
 \end{itemize}
 
-As is evident from these rules, dual numbers are connected with differentiation. Using a dual
-argument $a + \varepsilon$ we can compute a value of a function at point $x = a$
-and its derivative at that point:
+As is evident from these rules, dual numbers are connected with
+differentiation. Using a dual argument $a + \varepsilon$ we can compute a value
+of a function at point $x = a$ and its derivative at that point:
 $f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also we can compute a partial
 derivative of a multivariate function. For example:
 \begin{equation}
@@ -616,9 +621,10 @@ Summarizing, the algorithm of calculating $F_{ss}(\bm{r})$ is the following:
 The set $X$ can be found by firstly evaluating $f(x, y)$ in some regular grid
 searching for all points $(x_i, y_i)$ for which $|f(x_i, y_i) - T| < \epsilon$
 and $|f(x_i - r_x, y_i - r_y) - T| < \epsilon$ for some positive $\epsilon$ 
-(small value does not affect computation results, $\epsilon=0.04$ was used in all cases in this work)
-and then using these points as starting points for some algorithm based on
-gradient descent (ADAM \cite{adam} was used in this work) to solve \cref{eq:inter}.
+(small value does not affect computation results, $\epsilon=0.04$ was used in
+all cases in this work) and then using these points as starting points for some
+algorithm based on gradient descent (ADAM \cite{adam} was used in this work) to
+solve \cref{eq:inter}.
 
 \subsection{Surface-surface-surface function for three-dimensional sets with
   smooth boundary}
@@ -634,9 +640,9 @@ $F_{sss}(\bm{r_1}, \bm{r_2}; \Delta)$:
   f_\Gamma(\bm{x} + \bm{r_2}; \Delta) \\
   &= \sum_{k=1}^N V_k/\Delta^3
 \end{align*}
-where $V_k$ is a volume of parallelepiped where all three multiplicands under integral
-are non-zero. $N$ is a number of these parallelepipeds, i.e. number of points
-where all three boundaries (one ``original'' boundary and two translated
+where $V_k$ is a volume of parallelepiped where all three multiplicands under
+integral are non-zero. $N$ is a number of these parallelepipeds, i.e. number of
+points where all three boundaries (one ``original'' boundary and two translated
 versions) have an intersection. With $\Delta$ going to zero we get a convergence
 to $F_{sss}$:
 \begin{equation*}
