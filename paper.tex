@@ -32,8 +32,8 @@
 %\affiliation{\textsuperscript{3}Oil and Gas Research Institute Russian Academy
 %  of Sciences (OGRI RAS) 3, Gubkina st., Moscow, 119333, Russian Federation}
 
-\title{Surface correlation functions calculations: improving methodology for
-  discrete images with novel exact continuous approach}
+\title{The 2- and 3-point surface correlation functions calculations: from novel
+  exact continuous approach to improving methodology for discrete images}
 
 \begin{abstract}
   Here we are again.
@@ -202,11 +202,13 @@ More detailed information on surface correlation functions can be found in
 \label{sec:algo}
 Here we briefly describe the algorithm for computation of surface-surface,
 surface-void and surface-surface-surface correlation functions for digital
-images of porous media. A more detailed description can be found in the recent paper of
-Samarin et~al. \textcolor{red}{cite paper} This algorithm can calculate surface
+images of porous media \cite{Samarin}. This discrete algorithm can calculate surface
 correlation functions for all possible directions and correlation lengths. It
-consists of two steps: edge detection and computation of autocorrelation.
+consists of two steps: edge detection and computation of autocorrelation. Next,
+we present some improvements in this approach that later will be verified withthe help of
+exact continuous method.
 
+\subsection{Discrete method details}
 We consider an image of porous medium in the form of two- or three-dimensional bit
 array $A$ as the input to our algorithm. In the first stage, we convolve the
 input with high-pass filter to extract edges from the image. In our previous paper \cite{Samarin} we used the
@@ -338,11 +340,12 @@ sampling pattern shown on \cref{fig:Fsss-pattern}
   \label{fig:Fsss-pattern}
 \end{figure}
 
-In this work, in addition to filter $H$, we propose an improved filter $H'$. The rationale
-behind this improvement is that:
+\subsection{Betterment of the discrete approach with improved edge filter}
+In this work, in addition to filter $H$, we propose an improved filter $H'$. The
+rationale behind this improvement is that:
 \begin{enumerate*}[label=\alph*)]
-\item a filter of width 3 is too narrow to give a good approximation for surface
-  functions;
+\item a filter of width 3 may turn to be too narrow to give a good approximation
+  for particular structures;
 \item filter $H$ is not invariant under rotations, i.e.
   $H*R(A) \ne R(H*A)$, where $R$ is a rotation operator.
 \end{enumerate*}
@@ -372,26 +375,28 @@ $30.45849$ in 2D and $172.96232$ in 3D case.
 \begin{figure}
   \centering
   \includegraphics[width=0.8\linewidth]{images/experiment-setup.png}
-  \caption[]{Left, center: images $A$ and $B$ used in the experiment for
-    approximation of $1 / \sin \phi$. Right: Interfaces between phases are
+  \caption[]{Left, center: images $Q_1$ and $Q_2$ used in the demostration of
+    approximation for $1 / \sin \phi$. Right: Interfaces between phases are
     line segments which intersect each other at angle $\phi$. Shaded area is
-    where $|(H*A)\cdot(H*B)|$ has non-zero values. Sum of all values in this
+    where $|(H*Q_1\cdot(H*Q_2)|$ has non-zero values. Sum of all values in this
     area approximates $1 / \sin \phi$.}
   \label{fig:experiment-setup}
 \end{figure}
-Take two 2D images like the ones on \cref{fig:experiment-setup}. Boundaries
+Consider two 2D images like the ones on \cref{fig:experiment-setup}. Boundaries
 between black and white areas cross each other at the angle $\phi$. We apply an
 edge detection filter to each image, multiply results element-wise and sum all
-elements of the product. We want an obtained value to approximate
+elements of the product. We want the resulting value to approximate
 $1/\sin \phi$. As can be seen on \cref{fig:filter-comparison} $H'$ does this job
 better than $H$. Why this is important will be explained in the next section.
 \begin{figure}
   \centering
   \includegraphics[width=0.8\linewidth]{images/filter-comparison.png}
-  \caption[]{Estimation of $1/\sin\phi$ by filters $H$ and $H'$ for binary images on \cref{fig:experiment-setup}.}
+  \caption[]{Estimation of $1/\sin\phi$ by filters $H$ and $H'$ for binary
+    images on \cref{fig:experiment-setup}.}
   \label{fig:filter-comparison}
 \end{figure}
 
+\subsection{Units for computed surface correlation funtions}
 From now on we introduce a conventional unit of measurement ($cu$) for length.
 When considering $F_{ss}$ and $F_{sv}$ functions we will work with square images
 with side equal to $1\ cu$, so we can omit division by $N$ in described
@@ -405,12 +410,12 @@ measurements in captions (e.g. we will write ``$F_{ss}$'' instead of
 
 \section{Computation of surface functions for sets with smooth boundary}
 \label{sec:algo-precise}
-In paper \textcolor{red}{our paper} we tested our algorithms for digital images
-against known analytic solutions. Although we obtained good results in the cases of
-overlapping balls and disks, weather our algorithm performs with the same high accuracy in
-general was still a question. In this section we present additional test case and
-develop an algorithm for calculation of $F_{ss}$ and $F_{sss}$ functions for
-two- and three-dimensional sets with smooth boundary.
+Previously \cite{Samarin} we tested algorithms for digital images against known
+analytic solutions. Although we obtained good results in the cases of
+overlapping balls and disks, weather our algorithm performs with the same high
+accuracy in general is still an open question. In this section we develop a
+universal test case and novel exact algorithm for calculation of $F_{ss}$ and
+$F_{sss}$ functions for two- and three-dimensional sets with smooth boundary.
 
 \subsection{Dual numbers and automatic differentiation}
 \label{sec:dual}
@@ -422,8 +427,8 @@ multiplication works according to the following law:
 \end{equation*}
 It's easy to see that $D$ is commutative.
 
-It is also useful to introduce an imaginary unit $\varepsilon$ and write a dual number
-$(a, b)$ as $a + b\varepsilon$. As follows from the multiplication law,
+It is also useful to introduce an imaginary unit $\varepsilon$ and write a dual
+number $(a, b)$ as $a + b\varepsilon$. As follows from the multiplication law,
 $1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
 integral domain and division is defined only if divisor has non-zero real part:
 \begin{align*}
@@ -465,9 +470,9 @@ Most useful basic rules for working with dual numbers can be summarized as follo
 \item $\tan(a + b\varepsilon) = \tan(a) - \frac{b}{cos^2(a)}\varepsilon$
 \end{itemize}
 
-As is evident from these rules, dual numbers are connected with differentiation. Using a dual
-argument $a + \varepsilon$ we can compute a value of a function at point $x = a$
-and its derivative at that point:
+As is evident from these rules, dual numbers are connected with
+differentiation. Using a dual argument $a + \varepsilon$ we can compute a value
+of a function at point $x = a$ and its derivative at that point:
 $f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also we can compute a partial
 derivative of a multivariate function. For example:
 \begin{equation}
@@ -671,14 +676,15 @@ and the expression for $F_{sss}$ becomes:
 where $J_k$ is Jacobian determinant computed at $k$-th point of
 intersection.
 
-\section{Results}
+\section{Verification and computation results}
 \label{sec:results}
-In this section we will provide few examples of sets for which the developed
-precise algorithm is applicable and compare the surface-surface function
+In this section we consider a variety of examples of sets for which the developed
+precise algorithm is applicable. We intercompare surface-surface functions
 calculated with the algorithm for digital images (\cref{sec:algo}) with results
-of the new algorithm. We will use the filter $H$ (\ref{eq:filter-3x3}) for edge
-detection along with a new filter $H'$ (\ref{eq:filter-7x7}) proposed in this
-paper.
+of the novel continuous algorithm. We also demonstrate the work of both filter
+$H$ (\ref{eq:filter-3x3}) for edge detection along with a new filter $H'$
+(\ref{eq:filter-7x7}) proposed in this paper. We verify both digital and
+continuous methods against available analytical solutions.
 
 \subsection{A square and a cube}
 Define a function $f(\bm{x}) = \max\limits_i |x_i|$. A set $f(\bm{x}) \le T$
@@ -722,8 +728,10 @@ The surface-surface-surface correlation function for this cube is equal to:
   \end{array}
   \right.
 \end{equation*}
-This case is also handled good by the algorithm described in
-\cref{sec:algo}. Plot of $F_{sss}$ for this case is trivial and not shown here.
+This case is also handled perfectly by the algorithm described in
+\cref{sec:algo}. Plot of $F_{sss}$ for the cube is trivially similar to
+\cref{fig:fss-square} and, thus, not shown here. We conclude that all approaches
+perform equaly accurately for this simple test.
 
 \subsection{A disk and a ball}
 Define $f(\bm{x}) = \sum_i x_i^2$. If $\bm{x} \in \mathbb{R}^2$ when an
@@ -737,8 +745,9 @@ the origin. In this case $F_{ss}$ depends only on distance $r$ from the origin:
   \end{array}
   \right.
 \end{equation*}
-A comparison of the algorithm described in \cref{sec:algo} applied to images
-with different resolution with a theory is shown on \cref{fig:fss-disk}.
+The comparison of the algorithm described in \cref{sec:algo} applied to images
+with different resolution against theory is shown on \cref{fig:fss-disk}.
+Continuous approach results for the disk coincide with analytical $F_{ss}$ function.
 \begin{figure*}[!hpt]
   \centering
   \subfigure[$3\times 3$ kernel $H$]{
@@ -757,7 +766,9 @@ with different resolution with a theory is shown on \cref{fig:fss-disk}.
 If $\bm{x} \in \mathbb{R}^3$ then an inequation $f(\bm{x}) \le R^2$ defines a
 ball. In this case we provide a comparison (\cref{fig:fsss-ball}) of the
 algorithm in \cref{sec:algo} with the precise algorithm in
-\cref{sec:fsss-3d}. There is no known analytic solution for this case.
+\cref{sec:fsss-3d}. There is no known analytical solution for 3D ball (one could
+derive a solution in analogy with 2D case \cite{Torquato_book}, but this is a
+non-trivial task well beyond the scope of the current work).
 \begin{figure*}[!hpt]
   \centering
   \includegraphics[width=0.45\linewidth]{images/ball-sss.png}
@@ -772,6 +783,11 @@ algorithm in \cref{sec:algo} with the precise algorithm in
     obtained by algorithm in \cref{sec:fsss-3d}.}
   \label{fig:fsss-ball}
 \end{figure*}
+
+We conclude that continuous approach has zero error against analitical solution
+around can be used to assess the quality of digital approach for discretized
+sets. As expected, digital approach performance depends on the image resolution
+with new edge filter outperforming $H$.
 
 \subsection{Gaussian mixture}
 \label{sec:gauss}
@@ -788,7 +804,8 @@ algorithm in \cref{sec:algo} with the precise algorithm in
     \label{fig:ellipses}}
   \caption[]{Examples of sets with smooth boundary.}
 \end{figure*}
-Take $N$ random values $a_i$, $b_i$ and $\sigma_i$. Let $f$ be
+Let us now consider more complex surfaces, including concave shapes. Take $N$
+random values of each of $a_i$, $b_i$ and $\sigma_i$. Let $f$ be:
 \begin{equation*}
   f(x,y) = \sum_{i=1}^N \frac{1}{\sigma_i} \exp(\frac{-(x-a_i)^2-(y-b_i)^2}{\sigma_i^2})
 \end{equation*}
@@ -796,7 +813,7 @@ Inequality $f(x,y) \le T$ defines a ``blob'' like one which can be seen on
 \cref{fig:blob}. We can use the algorithm developed in \cref{sec:fss-2d} to
 compute precise values of $F_{ss}$ for this blob and compare them with values
 obtained by using the algorithm in section \cref{sec:algo}. The result of this
-comparison is on \cref{fig:fss-blob}.
+comparison is presented on \cref{fig:fss-blob}.
 \begin{figure*}[!hpt]
   \centering
   \subfigure[$3\times 3$ kernel $H$]{
@@ -841,10 +858,11 @@ comparison between two algorithms is on \cref{fig:fss-ellipses}.
   \label{fig:fss-ellipses}
 \end{figure*}
 
-\subsection{Influence of filter $H'$ on cases not covered by the new algorithm}
-In this section we show how filter $H'$ affects calculation of surface-functions
-in cases not covered by the algorithm described in \cref{sec:fss-2d} and
-\cref{sec:fsss-3d}.
+Again, we observe the convergence of continuous and discrete approaches to
+compute surface functions \cite{Samarin} that confirms the accuracy of results
+thus obtained.
+
+\subsection{Influence of filter $H'$ on computation accuracy}
 
 \begin{figure*}
   \centering
@@ -867,7 +885,7 @@ in cases not covered by the algorithm described in \cref{sec:fss-2d} and
     applicable. Theoretical curves are provided for each case.}
   \label{fig:not-covered}
 \end{figure*}
-With the new filter calculation of $F_{ss}$ becomes more precise also for
+With the new filter the calculation of $F_{ss}$ becomes more precise also for
 three-dimensional images. This can be seen in comparison with theoretical values
 for known cases like the one of a ball. On \cref{fig:fss-ball} there are plots
 of $F_{ss}$ function calculated with filters $H$ and $H'$ along with a
@@ -890,18 +908,42 @@ also for $H'$, but sometimes it's possible to calculate a poor estimate of
 $F_{ss}$ using $H$ but not $H'$. Secondly, $H'$ behaves worse that $H$ in points
 of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
 
-\section{Conclusion}
-% Is this a right label?
+\section{Discussion, outlook and summary}
 \label{sec:summary}
-In this paper we develop an algorithm for precise calculation of $F_{ss}$
-function for two-dimensional sets and $F_{sss}$ function for three-dimensional
-sets. These sets must have smooth boundary for the algorithm to be
-applicable. With help of this algorithm we introduce some new test cases and
-check our algorithm for digital images more thoroughly. The algorithm is
-improved using a wider filter $H'$.
+The exact continuos method presented in this paper is developed only for
+surface-surface function (and its 3-point counterpart). The surface-void
+function computations in digital manner are much more robust and exhibit no
+noise \cite{ma2018SS,Samarin}. The filter $H'$ verified for $F_{ss}$ also
+improves calculations for $F_{sv}$ (as evident from \cref{fig:not-covered}).
 
-An implementation of the precise algorithm for sets with smooth boundary is
-available on GitHub\cite{diff-boundary-corrfn}.
+In addition to obvious applications of surface correlations, as described in
+\cref{sec:intro}, the development of robust computation techniques opens
+interesting research directions:
+\begin{enumerate}
+    \item Possibility to evaluate surface functions from small-angle scattering
+      experiments \cite{theor_paper};
+    \item Finding overall trends in porous media structural evolution, e.g.,
+      based on experimental datasets \cite{Jose,Fomin,nano_structure};
+    \item Description of interfaces during multi-phase flow beyond conventional
+      metrics (e.g., surface area or Minkowski functionals which are all subset
+      of classical correlation functions) \cite{Hassanizadeh,Armstrong}.
+\end{enumerate}
+This list immediately pops up from the authors' research activities and
+potentially is much wider.
+
+In summary, here we developed novel algorithm for precise calculation of
+$F_{ss}$ function for two-dimensional sets and $F_{sss}$ function for
+three-dimensional sets. These sets must have smooth boundary for the algorithm
+to be applicable. With help of this new algorithm we introduced some additional
+testing techniques for digital computational methodology, including concave
+surface shapes.  In particular, we were able to demostrate the inmprovement in
+calculations of surface-surface and surface-viod correlation functions for
+digital binary images with the help of proposed $H'$ filter.
+
+An implementation of the precise continuous algorithm in Common Lisp for sets
+with smooth boundary is available on GitHub\cite{diff-boundary-corrfn}. Improved
+digital approach for both $F_{ss}$ and $F_{sss}$ is now part of open source
+package CorrelationFunctions.jl written in Julia \cite{CFs.jl}.
 
 \bibliography{paper}
 \end{document}
