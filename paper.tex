@@ -890,35 +890,42 @@ filter $H'$. Calculation of surface-void function also benefits from the new
 filter (\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
 
 Unfortunately the filter $H'$ has some drawbacks in comparison with $H$. Firstly
-$H$ has faster convergence with increase of image resolution. Our
-acceptance criterion $C_{0.5} > 0.97$ developed in \textcolor{red}{cite our
-  paper again} works also for $H'$, but sometimes when the criterion is not
-satisfied, it's possible to calculate a poor estimate of $F_{ss}$ using $H$ but
-not $H'$. For example, consider images of a disk used for calculation of
-$F_{ss}$ on \cref{fig:fss-disk}. In \cref{table:crit} we provide values of
-$C_{0.5}$ criterion and errors \cref{eq:error} for filters $H$ and $H'$.
+$H$ has faster convergence with increase of image resolution. We developed an
+acceptance parameter $C_{0.5}$ to determine if an image is suitable for
+processing with our algorithm or not. This parameter is defined as
+\begin{equation*}
+  C_{0.5} = \frac{\text{Power of the lower half of the image's
+      spectrum}}{\text{Power of the image}}
+\end{equation*}
+In this expression the words ``Power of the image'' are understood as $L^2$ norm
+of the image and ``the lower half of the \dots spectrum'' is the part of the
+spectrum (Fourier image) with frequencies $[-\omega_N/2, \omega_N/2]$ where
+$\omega_N$ is a Nyquist frequency for the image. It's important to firstly
+subtract the zeroth frequency (mean value) from the image before calculation of
+$C_{0.5}$. The image is suitable for processing if the acceptance criterion
+$C_{0.5} > 0.97$ holds. This criterion works for both filters $H$ and $H'$, but
+$H$ results in smaller error when $C_{0.5}$ is slightly less than 0.97. For
+example, consider images of a disk used for calculation of $F_{ss}$ for
+\cref{fig:fss-disk}. On \cref{fig:error} we provide values of $C_{0.5}$ for
+those images and relative errors in $F_{ss}$ \cref{eq:error} for both filters.
 
 Secondly, $H'$ behaves worse that $H$ in points
 of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
 
-\begin{table}[h!]
+\begin{figure*}[!hpt]
   \centering
-  \begin{tabular}{|c | c | c | c|}
-    \hline
-    Dimensions & $C_{0.5}$ & Error ($H$) & Error ($H'$) \\
-    \hline
-    $100 \times 100$ & 0.822 & 0.178 & 0.408 \\
-    \hline
-    $400 \times 400$ & 0.921 & 0.072 & 0.098 \\
-    \hline
-    $3100 \times 3100$ & 0.972 & 0.049 & 0.009 \\
-    \hline
-  \end{tabular}
-  \caption{$C_{0.5}$ criterion and relative errors in computation of $F_{ss}$
-    for filters $H$ and $H'$. The case with a disk. Plots of $F_{ss}$ functions
-    can be seen on \cref{fig:fss-disk}.}
-  \label{table:crit}
-\end{table}
+  \subfigure[$C_{0.5}$ criterion]{
+    \includegraphics[width=0.45\linewidth]{images/c05.png}
+    \label{fig:c05}}
+  \hfill
+  \subfigure[Relative errors in computation of $F_{ss}$]{
+    \includegraphics[width=0.45\linewidth]{images/fss-disk-errors.png}
+    \label{fig:relerr}}
+  \caption[]{Relative errors in function $F_{ss}$ for the case of a disk
+    (\cref{fig:fss-disk}) for filters $H$ and $H'$ and the acceptance parameter
+    $C_{0.5}$.}
+  \label{fig:error}
+\end{figure*}
 
 \section{Conclusion}
 % Is this a right label?
