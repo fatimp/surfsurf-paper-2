@@ -879,22 +879,46 @@ for known cases like the one of a ball. On \cref{fig:fss-ball} there are plots
 of $F_{ss}$ function calculated with filters $H$ and $H'$ along with a
 theoretical curve. It can be verified that filter $H'$ is better indeed by
 calculating
-\begin{equation*}
+\begin{equation}
   error = \sqrt{\frac{\sum_i (F_{ss}^{calc}(x_i) -
       F_{ss}^{theory}(x_i))^2}{\sum_i F_{ss}^{theory}(x_i)^2}}
-\end{equation*}
-where $x_i$ belong to a set
-$(\epsilon, 2R - \epsilon) \cup (2R + \epsilon, 1)$. Taking $\epsilon = 0.01$ we
-get $error = 0.006$ for filter $H$ and $error = 0.00017$ for filter
-$H'$. Calculation of surface-void function also benefits from the new filter
-(\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
+  \label{eq:error}
+\end{equation}
+where $x_i$ belong to a set $(\epsilon, 2R - \epsilon)$. Taking
+$\epsilon = 0.01$ we get $error = 0.05$ for filter $H$ and $error = 0.03$ for
+filter $H'$. Calculation of surface-void function also benefits from the new
+filter (\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
 
 Unfortunately the filter $H'$ has some drawbacks in comparison with $H$. Firstly
 $H$ has faster convergence with increase of image resolution. Our
-acceptance criterion developed in \textcolor{red}{cite our paper again} works
-also for $H'$, but sometimes it's possible to calculate a poor estimate of
-$F_{ss}$ using $H$ but not $H'$. Secondly, $H'$ behaves worse that $H$ in points
+acceptance criterion $C_{0.5} > 0.97$ developed in \textcolor{red}{cite our
+  paper again} works also for $H'$, but sometimes when the criterion is not
+satisfied, it's possible to calculate a poor estimate of $F_{ss}$ using $H$ but
+not $H'$. For example, consider images of a disk used for calculation of
+$F_{ss}$ on \cref{fig:fss-disk}. In \cref{table:crit} we provide values of
+$C_{0.5}$ criterion and errors \cref{eq:error} for filters $H$ and $H'$.
+
+Secondly, $H'$ behaves worse that $H$ in points
 of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{|c | c | c | c|}
+    \hline
+    Dimensions & $C_{0.5}$ & Error ($H$) & Error ($H'$) \\
+    \hline
+    $100 \times 100$ & 0.822 & 0.178 & 0.408 \\
+    \hline
+    $400 \times 400$ & 0.921 & 0.072 & 0.098 \\
+    \hline
+    $3100 \times 3100$ & 0.972 & 0.049 & 0.009 \\
+    \hline
+  \end{tabular}
+  \caption{$C_{0.5}$ criterion and relative errors in computation of $F_{ss}$
+    for filters $H$ and $H'$. The case with a disk. Plots of $F_{ss}$ functions
+    can be seen on \cref{fig:fss-disk}.}
+  \label{table:crit}
+\end{table}
 
 \section{Conclusion}
 % Is this a right label?
