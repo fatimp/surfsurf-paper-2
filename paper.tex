@@ -150,7 +150,8 @@ defined as follows:
 
 Now we define two disjoint sets in a homogeneous porous medium: a set of solid
 phase $S$ and a set of void phase $V$. Surface-surface correlation function
-$F_{ss}$ and surface-void correlation function $F_{sv}$ are then defined as follows:
+$F_{ss}$ and surface-void correlation function $F_{sv}$ are then defined as
+follows:
 \begin{align}
   F_{ss}(\bm{r}) &= \langle |\nabla \chi_S(\bm{x})| |\nabla \chi_S(\bm{x} +
   \bm{r})| \rangle \label{eq:fss} \\
@@ -202,17 +203,17 @@ More detailed information on surface correlation functions can be found in
 \label{sec:algo}
 Here we briefly describe the algorithm for computation of surface-surface,
 surface-void and surface-surface-surface correlation functions for digital
-images of porous media \cite{Samarin}. This discrete algorithm can calculate surface
-correlation functions for all possible directions and correlation lengths. It
-consists of two steps: edge detection and computation of autocorrelation. Next,
-we present some improvements in this approach that later will be verified withthe help of
-exact continuous method.
+images of porous media \cite{Samarin}. This discrete algorithm can calculate
+surface correlation functions for all possible directions and correlation
+lengths. It consists of two steps: edge detection and computation of
+autocorrelation. Next, we present some improvements in this approach that later
+will be verified with the help of exact continuous method.
 
 \subsection{Discrete method details}
 We consider an image of porous medium in the form of two- or three-dimensional bit
 array $A$ as the input to our algorithm. In the first stage, we convolve the
-input with high-pass filter to extract edges from the image. In our previous paper \cite{Samarin} we used the
-following filter kernel $H$:
+input with high-pass filter to extract edges from the image. In our previous
+paper \cite{Samarin} we used the following filter kernel $H$:
 \begin{equation}
   \begin{aligned}
     H_{ij} &= \frac{1}{6} \left[
@@ -271,7 +272,8 @@ properties of Fourier transform (here $\hat{f}(z) = F[f(x)]$):
   F[f(x) \star f(x)] = F[f(x) * f(-x)] = \hat{f}(z)\overline{\hat{f}(z)} = |\hat{f}(z)|^2
 \end{equation*}
 
-Putting everything together, we obtain the following algorithm for calculation of $F_{ss}$ function:
+Putting everything together, we obtain the following algorithm for calculation
+of $F_{ss}$ function:
 \begin{algorithmic}[1]
   \Procedure{surfsurf}{$A$}
   \State $A' \gets |H*A|$
@@ -304,11 +306,12 @@ the same shape as $A$ which contains values of correlation function for the
 vector $r = (i, j)$ (resp. $r = (i, j, k)$). This result can be averaged over
 all directions if needed.
 
-For surface-surface-surface function $F_{sss}$ the previously described approach can also be
-used, but it results in inefficient memory usage because for three-dimensional case $F_{sss}$ is a function of six scalar coordinates, which leads
-to a very large output array. Therefore, instead we use a somewhat slower, but more memory efficient, approach
-that computes $F_{sss}$ at a specified point calculating a convolution using
-its definition:
+For surface-surface-surface function $F_{sss}$ the previously described approach
+can also be used, but it results in inefficient memory usage because for
+three-dimensional case $F_{sss}$ is a function of six scalar coordinates, which
+leads to a very large output array. Therefore, instead we use a somewhat slower,
+but more memory efficient, approach that computes $F_{sss}$ at a specified point
+calculating a convolution using its definition:
 \begin{algorithmic}[1]
   \Procedure{surfsurfsurf}{$A$, $\bm{r_1}$, $\bm{r_2}$}
   \State $A' \gets |H*A|$
@@ -621,9 +624,10 @@ Summarizing, the algorithm of calculating $F_{ss}(\bm{r})$ is the following:
 The set $X$ can be found by firstly evaluating $f(x, y)$ in some regular grid
 searching for all points $(x_i, y_i)$ for which $|f(x_i, y_i) - T| < \epsilon$
 and $|f(x_i - r_x, y_i - r_y) - T| < \epsilon$ for some positive $\epsilon$ 
-(small value does not affect computation results, $\epsilon=0.04$ was used in all cases in this work)
-and then using these points as starting points for some algorithm based on
-gradient descent (ADAM \cite{adam} was used in this work) to solve \cref{eq:inter}.
+(small value does not affect computation results, $\epsilon=0.04$ was used in
+all cases in this work) and then using these points as starting points for some
+algorithm based on gradient descent (ADAM \cite{adam} was used in this work) to
+solve \cref{eq:inter}.
 
 \subsection{Surface-surface-surface function for three-dimensional sets with
   smooth boundary}
@@ -639,9 +643,9 @@ $F_{sss}(\bm{r_1}, \bm{r_2}; \Delta)$:
   f_\Gamma(\bm{x} + \bm{r_2}; \Delta) \\
   &= \sum_{k=1}^N V_k/\Delta^3
 \end{align*}
-where $V_k$ is a volume of parallelepiped where all three multiplicands under integral
-are non-zero. $N$ is a number of these parallelepipeds, i.e. number of points
-where all three boundaries (one ``original'' boundary and two translated
+where $V_k$ is a volume of parallelepiped where all three multiplicands under
+integral are non-zero. $N$ is a number of these parallelepipeds, i.e. number of
+points where all three boundaries (one ``original'' boundary and two translated
 versions) have an intersection. With $\Delta$ going to zero we get a convergence
 to $F_{sss}$:
 \begin{equation*}
@@ -891,22 +895,56 @@ for known cases like the one of a ball. On \cref{fig:fss-ball} there are plots
 of $F_{ss}$ function calculated with filters $H$ and $H'$ along with a
 theoretical curve. It can be verified that filter $H'$ is better indeed by
 calculating
-\begin{equation*}
+\begin{equation}
   error = \sqrt{\frac{\sum_i (F_{ss}^{calc}(x_i) -
       F_{ss}^{theory}(x_i))^2}{\sum_i F_{ss}^{theory}(x_i)^2}}
-\end{equation*}
-where $x_i$ belong to a set
-$(\epsilon, 2R - \epsilon) \cup (2R + \epsilon, 1)$. Taking $\epsilon = 0.01$ we
-get $error = 0.006$ for filter $H$ and $error = 0.00017$ for filter
-$H'$. Calculation of surface-void function also benefits from the new filter
-(\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
+  \label{eq:error}
+\end{equation}
+where $x_i$ belong to a set $(\epsilon, 2R - \epsilon)$. Taking
+$\epsilon = 0.01$ we get $error = 0.05$ for filter $H$ and $error = 0.03$ for
+filter $H'$. Calculation of surface-void function also benefits from the new
+filter (\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
 
-Unfortunately the filter $H'$ has some drawbacks in comparison with $H$. Firstly
-$H$ has faster convergence with increase of image resolution. Our
-acceptance criterion developed in \textcolor{red}{cite our paper again} works
-also for $H'$, but sometimes it's possible to calculate a poor estimate of
-$F_{ss}$ using $H$ but not $H'$. Secondly, $H'$ behaves worse that $H$ in points
+Unfortunately the filter $H'$ has some drawbacks in comparison with
+$H$. Firstly, $H$ has faster convergence with increase of image resolution. To
+demonstrate this we can use an acceptance parameter $C_{0.5}$ developed to
+determine if an image is suitable for processing with our algorithm or not. This
+parameter is defined as
+\begin{equation*}
+  C_{0.5} = \frac{\text{Power of the lower half of the image's
+      spectrum}}{\text{Power of the image}}
+\end{equation*}
+In this expression the words ``Power of the image'' are understood as $L^2$ norm
+of the image and ``the lower half of the \dots spectrum'' is the part of the
+spectrum (Fourier image) with frequencies $[-\omega_N/2, \omega_N/2]$ where
+$\omega_N$ is a Nyquist frequency for the image. It's important to firstly
+subtract the zeroth frequency (mean value) from the image before calculation of
+$C_{0.5}$. The image is suitable for processing if the acceptance criterion
+$C_{0.5} > 0.97$ holds. This criterion works for both filters $H$ and $H'$, but
+$H$ results in smaller error when $C_{0.5}$ is slightly less than 0.97. For
+example, consider images of a disk used for calculation of $F_{ss}$ on
+\cref{fig:fss-disk}. On \cref{fig:error} we provide values of $C_{0.5}$ for
+those images and relative errors in $F_{ss}$ (\cref{eq:error}) for both
+filters. It can be seen that $H$ gives twice the lower error than $H'$ when used
+for an image with $C_{0.5} \approx 0.82$.
+
+Secondly, $H'$ behaves worse that $H$ in points
 of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
+
+\begin{figure*}[!hpt]
+  \centering
+  \subfigure[$C_{0.5}$ criterion]{
+    \includegraphics[width=0.45\linewidth]{images/c05.png}
+    \label{fig:c05}}
+  \hfill
+  \subfigure[Relative errors in computation of $F_{ss}$]{
+    \includegraphics[width=0.45\linewidth]{images/fss-disk-errors.png}
+    \label{fig:relerr}}
+  \caption[]{Relative errors in function $F_{ss}$ for the case of a disk
+    (\cref{fig:fss-disk}) for filters $H$ and $H'$ and the acceptance parameter
+    $C_{0.5}$.}
+  \label{fig:error}
+\end{figure*}
 
 \section{Discussion, outlook and summary}
 \label{sec:summary}
