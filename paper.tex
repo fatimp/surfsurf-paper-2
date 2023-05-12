@@ -36,7 +36,16 @@
   exact continuous approach to improving methodology for discrete images}
 
 \begin{abstract}
-  Here we are again.
+  Surface correlation functions are extremely useful descriptors of interfaces and in this role 
+  can be used in material science, rock and soil physics, food engineering and other numerous
+  areas. However, their widespread usage was hampered by insufficiently robust computation methodologies. 
+  In this contribution we elaborate on recent works in surface function evaluation and present a 
+  novel exact algorithm to compute $F_{ss}$ and $F_{sss}$ functions for smooth boundary sets without 
+  discretization. This allows us to test digital computational approach on geometries beyond those with 
+  analytical solutions. Moreover, we propose a better edge detection filter that allowed to improve the 
+  quality of surface correlation functions (both surface-surface and surface-void) assessment based on 
+  digital images. The code for continuous and discrete computational frameworks is freely available and 
+  is now the part of the more general CorrelationFunctions.jl package.
 \end{abstract}
 \keywords {3D images; correlation functions; surface-surface function;
   surface-void function; image analysis; image scaling}
@@ -61,7 +70,7 @@ computed from structural images were used for:
   \item compressing structural information \cite{SciRep1,Havelka} by
     representing huge datasets in the form of a limited set of CFs that can be
     further squeezed into parameters for a number of basis functions
-    \cite{jiao_basis,KarsaninaEJSS},
+    \cite{jiao2007,KarsaninaEJSS},
   \item describing structural dynamics and evolution
     \cite{chen2015dynamic,PLoS_ONE,xu2022correlation},
   \item extracting features for deep learning
@@ -72,27 +81,27 @@ computed from structural images were used for:
   \item fusing multi-scale images \cite{SciRep1,chen2016stochastic,Geoderma2018}
     into a single representation,
   \item evaluation of image replica quality, e.g., stochastic reconstructions
-    \cite{deeep_papers_or_somethingelse},
-  \item assessing stationarity of the structure at hand \cite{REVpaper}.
+    \cite{capek2009},
+  \item assessing stationarity of the structure at hand \cite{REVpaper,EfimEPL}.
 \end{enumerate}
 
 In majority, if not all, cases mentioned above, surface functions - namely,
 $F_{ss}$ and $F_{sv}$ - were underrepresented due to our inability to compute
-them in a robust way. While known for a long time \cite{theory_in_MT}, only
-somewhat crude approximate approaches \cite{crude_approx_inMT} were developed
+them in a robust way. While known for a long time \cite{dietrich1995scattering}, only
+somewhat crude approximate approaches \cite{seaton1986spatial} were developed
 until Ma and Torquato laid foundation for such a robust computational
 methodology \cite{ma2018SS}. They proposed an elegant solution for infinite
-resolution Gaussian random fields, or "continouos" approach. They also assumed
+resolution Gaussian random fields, or "continuous" approach. They also assumed
 that the same approach can be readily applied to discrete experimental images if
-grey-scale values are thresholded in a similar way to continuious Gaussian
-field. Samarin et al. \cite{our_SS_paper} argued that experimental images needs
+grey-scale values are thresholded similarly to continuous Gaussian
+field. Samarin et al. \cite{Samarin} argued that experimental images needs
 to be segmented first using current cutting edge techniques \cite{NNseg} and
-proposed "discrete" approach. The latter allowed to obtain surface functions
-closer to analytical solutions for overlapping disks/spheres and to supress
+proposed "discrete" approach. The latter allowed obtaining surface functions
+closer to analytical solutions for overlapping disks/spheres and to suppress
 noise, in particular for $F_{ss}$. The noise in Ma and Torquato method resulted
 from $1/cos(\theta)$ computations during random line segment placement - this
 leaves a room for improvements. While Samarin et al. obtained better convergence
-with analytical solution, this was demostrated only for overlapping disks image
+with analytical solution, this was demonstrated only for overlapping disks image
 of limited size (that can potentially introduce some differences between
 computations and analytical solution for infinite size structure). Moreover,
 good agreement was achieved by manually fitting the values of edge-detecting
@@ -105,7 +114,7 @@ If computed accurately for any arbitrary structure at hand, surface CFs can be
 utilized in a multitude of applications:
 \begin{enumerate}
   \item describing real surfaces resulting from different mechanical processes,
-    e.g., cracking \cite{some_examples},
+    e.g., cracking \cite{hansen1991roughness,akhavan2012quantifying},
   \item delineating surface evolution \cite{chen2022} during such mechanical
     cracking events or reactive transport in porous media
     \cite{godinho2016,noiriel2021,prokhorov2022},
@@ -118,9 +127,9 @@ highlight the necessity to establish robust techniques for $F_{ss}$ and $F_{sv}$
 evaluation.
 
 In this contribution we continue to build upon foundational work of Ma and
-Torquato \cite{ma2018SS} and recent findings of Samarin et al. \cite{our_SS} to
+Torquato \cite{ma2018SS} and recent findings of Samarin et al. \cite{Samarin} to
 develop a robust and efficient approach to compute surface correlation functions
-from digital 2D and 3D images. In partiuclar, here our aim is to establish a
+from digital 2D and 3D images. In particular, here our aim is to establish a
 direct verification of "discrete" methodology (that is easily parallelizable on
 CPU and GPU architectures) using exact noiseless "continuous" approach for
 arbitrary structures (still described by some continuous function). The rest of
@@ -187,7 +196,7 @@ physical quantity inversely proportional to volume. SI units for $F_{sss}$ are
 $m^{-3}$, but relative units can be used in practice. For three-dimensional media
 $F_{sss}$ is a function of six scalar arguments:
 $\bm{r_1} = (r_{1x}, r_{1y}, r_{1z})$ and $\bm{r_2} = (r_{2x}, r_{2y}, r_{2z})$.
-However if the medium under consideration is isotropic, only three scalar
+However, if the medium under consideration is isotropic, only three scalar
 arguments $r_1 = |\bm{r_1}|$, $r_2 = |\bm{r_2}|$ and $r_3 = |\bm{r_1} - \bm{r_2}|$
 are required. The last argument can be replaced with an angle $\theta$ between
 vectors $\bm{r_1}$ and $\bm{r_2}$:
@@ -378,7 +387,7 @@ $30.45849$ in 2D and $172.96232$ in 3D case.
 \begin{figure}
   \centering
   \includegraphics[width=0.8\linewidth]{images/experiment-setup.png}
-  \caption[]{Left, center: images $Q_1$ and $Q_2$ used in the demostration of
+  \caption[]{Left, center: images $Q_1$ and $Q_2$ used in the demonstration of
     approximation for $1 / \sin \phi$. Right: Interfaces between phases are
     line segments which intersect each other at angle $\phi$. Shaded area is
     where $|(H*Q_1\cdot(H*Q_2)|$ has non-zero values. Sum of all values in this
@@ -399,7 +408,7 @@ better than $H$. Why this is important will be explained in the next section.
   \label{fig:filter-comparison}
 \end{figure}
 
-\subsection{Units for computed surface correlation funtions}
+\subsection{Units for computed surface correlation functions}
 From now on we introduce a conventional unit of measurement ($cu$) for length.
 When considering $F_{ss}$ and $F_{sv}$ functions we will work with square images
 with side equal to $1\ cu$, so we can omit division by $N$ in described
@@ -476,7 +485,7 @@ Most useful basic rules for working with dual numbers can be summarized as follo
 As is evident from these rules, dual numbers are connected with
 differentiation. Using a dual argument $a + \varepsilon$ we can compute a value
 of a function at point $x = a$ and its derivative at that point:
-$f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also we can compute a partial
+$f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also, we can compute a partial
 derivative of a multivariate function. For example:
 \begin{equation}
   \begin{aligned}
@@ -513,7 +522,7 @@ introduce a function $f_\Gamma(\bm{x}; \Delta)$:
   \end{array}
   \right. \label{eq:delta-sequence}
 \end{equation}
-Here $\rho(\bm{x}, \Gamma)$ means a closest distance from point $\bm{x}$ to the
+Here $\rho(\bm{x}, \Gamma)$ means the closest distance from point $\bm{x}$ to the
 boundary $\Gamma$.
 
 \begin{figure}
@@ -615,7 +624,7 @@ their length equal to $1$) and use \cref{eq:fss-2d} to calculate $F_{ss}$.
 
 Summarizing, the algorithm of calculating $F_{ss}(\bm{r})$ is the following:
 \begin{enumerate}
-\item Find $X$ which is a set of soulutions of \cref{eq:inter}.
+\item Find $X$ which is a set of solutions of \cref{eq:inter}.
 \item For all points in $X$ find normals to the boundaries using
   \cref{eq:autonormals} and normalize them.
 \item Calculate $F_{ss}(\bm{r})$ using \cref{eq:fss-2d}.
@@ -687,13 +696,13 @@ precise algorithm is applicable. We intercompare surface-surface functions
 calculated with the algorithm for digital images (\cref{sec:algo}) with results
 of the novel continuous algorithm. We also demonstrate the work of both filter
 $H$ (\ref{eq:filter-3x3}) for edge detection along with a new filter $H'$
-(\ref{eq:filter-7x7}) proposed in this paper. We verify both digital and
-continuous methods against available analytical solutions.
+(\ref{eq:filter-7x7}) proposed in this paper. Both digital and
+continuous methods are verified against available analytical solutions.
 
 \subsection{A square and a cube}
 Define a function $f(\bm{x}) = \max\limits_i |x_i|$. A set $f(\bm{x}) \le T$
 where $\bm{x} \in \mathbb{R}^2$ is a square with side $2T$. The function $f$ is
-differentiable at all points where $f(\bm{x}) = T$ with exception of points
+differentiable at all points where $f(\bm{x}) = T$ with exception to points
 $(-T, -T)$, $(-T, T)$, $(T, -T)$ and $(T, T)$. The surface-surface correlation
 function for a square is equal to:
 \begin{equation*}
@@ -735,7 +744,7 @@ The surface-surface-surface correlation function for this cube is equal to:
 This case is also handled perfectly by the algorithm described in
 \cref{sec:algo}. Plot of $F_{sss}$ for the cube is trivially similar to
 \cref{fig:fss-square} and, thus, not shown here. We conclude that all approaches
-perform equaly accurately for this simple test.
+perform equally accurately for this simple test.
 
 \subsection{A disk and a ball}
 Define $f(\bm{x}) = \sum_i x_i^2$. If $\bm{x} \in \mathbb{R}^2$ when an
@@ -782,13 +791,13 @@ non-trivial task well beyond the scope of the current work).
     obtained by algorithm \cref{sec:algo} for a ball with radius
     $R = 0.3$. $\bm{r_1}$ is parallel to a vector $\bm{i} = (1, 0, 0)$ and
     $\bm{r_2}$ is parallel to a vector $\bm{j} = (0, 1, 0)$. Vectors $\bm{i}$
-    and $\bm{j}$ constitute a two dimensional parameter space for $F_{sss}$. On
+    and $\bm{j}$ constitute a two-dimensional parameter space for $F_{sss}$. On
     the right: Relative error of computation. True values for $F_{sss}$ are
     obtained by algorithm in \cref{sec:fsss-3d}.}
   \label{fig:fsss-ball}
 \end{figure*}
 
-We conclude that continuous approach has zero error against analitical solution
+We conclude that continuous approach has zero error against analytical solution
 around can be used to assess the quality of digital approach for discretized
 sets. As expected, digital approach performance depends on the image resolution
 with new edge filter outperforming $H$.
@@ -891,45 +900,48 @@ thus obtained.
 \end{figure*}
 With the new filter the calculation of $F_{ss}$ becomes more precise also for
 three-dimensional images. This can be seen in comparison with theoretical values
-for known cases like the one of a ball. On \cref{fig:fss-ball} there are plots
+for known cases, e.g., a ball. On \cref{fig:fss-ball} plots
 of $F_{ss}$ function calculated with filters $H$ and $H'$ along with a
-theoretical curve. It can be verified that filter $H'$ is better indeed by
-calculating
+theoretical curve are presented. It can be verified that filter $H'$ is indeed results 
+in higher accuracies with the help of error metric:
 \begin{equation}
   error = \sqrt{\frac{\sum_i (F_{ss}^{calc}(x_i) -
       F_{ss}^{theory}(x_i))^2}{\sum_i F_{ss}^{theory}(x_i)^2}}
   \label{eq:error}
 \end{equation}
 where $x_i$ belong to a set $(\epsilon, 2R - \epsilon)$. Taking
-$\epsilon = 0.01$ we get $error = 0.05$ for filter $H$ and $error = 0.03$ for
-filter $H'$. Calculation of surface-void function also benefits from the new
+$\epsilon = 0.01$ we obtain the +$error = 0.05$ for filter $H$ and $error = 0.03$ for
+filter $H'$, respectively. Calculation of surface-void function also benefits from the new
 filter (\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
 
-Unfortunately the filter $H'$ has some drawbacks in comparison with
-$H$. Firstly, $H$ has faster convergence with increase of image resolution. To
-demonstrate this we can use an acceptance parameter $C_{0.5}$ developed to
-determine if an image is suitable for processing with our algorithm or not. This
-parameter is defined as
+However, the $H'$ filter has some drawbacks as compared to
+$H$. Firstly, $H$ has faster convergence with increase of image resolution. 
+Secondly, $H'$ behaves worse that $H$ in points
+of discontinuity of $F_{ss}$ for low resolutions as can be seen on \cref{fig:fss-disk}.
+To explore such effects we appeal to the criterion $C_{0.5}$ \cite{Samarin} developed to
+determine if an image is suitable for robust surface correlation functions assessment. This
+parameter is defined as:
 \begin{equation*}
   C_{0.5} = \frac{\text{Power of the lower half of the image's
       spectrum}}{\text{Power of the image}}
 \end{equation*}
-In this expression the words ``Power of the image'' are understood as $L^2$ norm
+In this expression the part of ``Power of the image'' refers to $L^2$ norm
 of the image and ``the lower half of the \dots spectrum'' is the part of the
 spectrum (Fourier image) with frequencies $[-\omega_N/2, \omega_N/2]$ where
-$\omega_N$ is a Nyquist frequency for the image. It's important to firstly
-subtract the zeroth frequency (mean value) from the image before calculation of
-$C_{0.5}$. The image is suitable for processing if the acceptance criterion
+$\omega_N$ is a Nyquist frequency of the image. It's important to firstly
+subtract the zeroth frequency (mean value) from the image before the calculation of
+$C_{0.5}$ is executed. The image is suitable for processing if the acceptance criterion
 $C_{0.5} > 0.97$ holds. This criterion works for both filters $H$ and $H'$, but
 $H$ results in smaller error when $C_{0.5}$ is slightly less than 0.97. For
 example, consider images of a disk used for calculation of $F_{ss}$ on
 \cref{fig:fss-disk}. On \cref{fig:error} we provide values of $C_{0.5}$ for
-those images and relative errors in $F_{ss}$ (\cref{eq:error}) for both
-filters. It can be seen that $H$ gives twice the lower error than $H'$ when used
+this image (for variety of resolutions) and relative errors in $F_{ss}$ (\cref{eq:error}) 
+for both filters. It can be seen that $H$ gives twice the lower error than $H'$ when used
 for an image with $C_{0.5} \approx 0.82$.
 
-Secondly, $H'$ behaves worse that $H$ in points
-of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
+In short, for images of acceptable quality the $H'$ filter is superior. Images with insufficient
+resolution benefit from downscaling prior to correlation functions evalution \cite{Samarin} (and 
+then again new filter will provide better results).
 
 \begin{figure*}[!hpt]
   \centering
@@ -948,7 +960,7 @@ of discontinuity of $F_{ss}$ as can be seen on \cref{fig:fss-disk}.
 
 \section{Discussion, outlook and summary}
 \label{sec:summary}
-The exact continuos method presented in this paper is developed only for
+The exact continuous method presented in this paper is developed only for
 surface-surface function (and its 3-point counterpart). The surface-void
 function computations in digital manner are much more robust and exhibit no
 noise \cite{ma2018SS,Samarin}. The filter $H'$ verified for $F_{ss}$ also
@@ -959,23 +971,22 @@ In addition to obvious applications of surface correlations, as described in
 interesting research directions:
 \begin{enumerate}
     \item Possibility to evaluate surface functions from small-angle scattering
-      experiments \cite{theor_paper};
+      experiments \cite{dietrich1995scattering};
     \item Finding overall trends in porous media structural evolution, e.g.,
-      based on experimental datasets \cite{Jose,Fomin,nano_structure};
-    \item Description of interfaces during multi-phase flow beyond conventional
-      metrics (e.g., surface area or Minkowski functionals which are all subset
-      of classical correlation functions) \cite{Hassanizadeh,Armstrong}.
+      based on experimental datasets \cite{noiriel2021pore,fomin2023};
+    \item Qualitative exploration of molecular scale roughness effects on electric 
+      double layer structure in asymmetric ionic liquids \cite{aslyamov2021,khlyupin2023}.
 \end{enumerate}
-This list immediately pops up from the authors' research activities and
-potentially is much wider.
+This list immediately pops up from the authors' research activities and is,
+potentially, much wider.
 
 In summary, here we developed novel algorithm for precise calculation of
 $F_{ss}$ function for two-dimensional sets and $F_{sss}$ function for
 three-dimensional sets. These sets must have smooth boundary for the algorithm
 to be applicable. With help of this new algorithm we introduced some additional
 testing techniques for digital computational methodology, including concave
-surface shapes.  In particular, we were able to demostrate the inmprovement in
-calculations of surface-surface and surface-viod correlation functions for
+surface shapes.  In particular, we were able to demonstrate the improvement in
+calculations of surface-surface and surface-void correlation functions for
 digital binary images with the help of proposed $H'$ filter.
 
 An implementation of the precise continuous algorithm in Common Lisp for sets
