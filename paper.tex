@@ -451,80 +451,6 @@ accuracy in general is still an open question. In this section we develop a
 universal test case and novel exact algorithm for calculation of $F_{ss}$ and
 $F_{sss}$ functions for two- and three-dimensional sets with smooth boundary.
 
-\subsection{Dual numbers and automatic differentiation}
-\label{sec:dual}
-A ring of dual numbers $D$ is a set of pairs of real numbers $(a, b)$ with two
-binary operations: $+$ (addition) and $\cdot$ (multiplication) where
-multiplication works according to the following law:
-\begin{equation}
-  (a, b)\cdot(c, d) = (ac, ad + bc)
-\end{equation}
-It's easy to see that $D$ is commutative.
-
-It is also useful to introduce an imaginary unit $\varepsilon$ and write a dual
-number $(a, b)$ as $a + b\varepsilon$. As follows from the multiplication law,
-$1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
-integral domain and division is defined only if divisor has non-zero real part:
-\begin{equation}
-  \begin{aligned}
-    \frac{a+b\varepsilon}{c+d\varepsilon} &=
-    \frac{(a+b\varepsilon)(c-d\varepsilon)}{(c+d\varepsilon)(c-d\varepsilon)} \\
-    &= \frac{ac-ad\varepsilon+bc\varepsilon}{c^2} \\
-    &= \frac{a}{c} + \frac{bc-ad}{c^2}\varepsilon
-  \end{aligned}
-\end{equation}
-
-Now we consider functions of dual variable $x + y\varepsilon$. Power function
-$(x + y\varepsilon)^n$ where $n \in \mathbb{N}$ can be defined using binomial
-formula and keeping in mind that $\varepsilon^n = 0$ if $n>1$:
-\begin{equation}
-  (x + y\varepsilon)^n = \sum_{k=0}^n \binom{n}{k} x^k (y\varepsilon)^{n-k} =
-  x^n + n x^{n-1} y \varepsilon
-\end{equation}
-This formula can be extended to $n \in \mathbb{Q}$ as well.
-
-Elementary functions can be extended to dual numbers using Taylor series (here
-$a$ is some point at which $f$ is differentiable):
-\begin{equation}
-  \begin{aligned}
-    f(x + y\varepsilon) &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x + y\varepsilon)^2 \\
-    & \qquad + \frac{f'''(a)}{3!}(x + y\varepsilon)^3 + \dots \\
-    &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x^2 + 2xy\varepsilon) \\
-    & \qquad + \frac{f'''(a)}{3!}(x^3 + 3x^2y\varepsilon) + \dots \\
-    &= f(a) + f'(a)x + \frac{f''(a)}{2!}x^2 + \frac{f'''(a)}{3!}x^3 + \dots \\
-    & \quad y\varepsilon(f'(a) + f''(a)x + \frac{f'''(a)}{2!}x^2 + \dots) \\
-    &= f(x) + yf'(x)\varepsilon
-  \end{aligned}
-\end{equation}
-
-Most useful basic rules for working with dual numbers can be summarized as follows:
-\begin{itemize}
-\item $(a + b\varepsilon) + (c + d\varepsilon) = (a + c) + (b + d)\varepsilon$
-\item $(a + b\varepsilon) (c + d\varepsilon) = ac + (ad + bc)\varepsilon$
-\item $\frac{a + b\varepsilon}{c + d\varepsilon} = \frac{a}{c} + \frac{bc - ad}{c^2}$
-\item $\exp(a + b\varepsilon) = \exp(a) + b\varepsilon\exp(a)$
-\item $\sin(a + b\varepsilon) = \sin(a) + b\varepsilon\cos(a)$
-\item $\cos(a + b\varepsilon) = \cos(a) - b\varepsilon\sin(a)$
-\item $\tan(a + b\varepsilon) = \tan(a) - \frac{b}{cos^2(a)}\varepsilon$
-\end{itemize}
-
-As is evident from these rules, dual numbers are connected with
-differentiation. Using a dual argument $a + \varepsilon$ we can compute a value
-of a function at point $x = a$ and its derivative at that point:
-$f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also, we can compute a partial
-derivative of a multivariate function. For example:
-\begin{equation}
-  \begin{aligned}
-    \frac{\partial}{\partial x} f(x, y) \vert_{x = a, y = b} &= f(a + \varepsilon,
-    b) \\
-    \frac{\partial}{\partial y} f(x, y) \vert_{x = a, y = b} &= f(a, b +
-    \varepsilon)
-  \end{aligned}
-  \label{eq:autonormals}
-\end{equation}
-This last equation will be useful for computation of normals to the interface in
-next sections.
-
 \subsection{Surface-surface function for two-dimensional sets with smooth boundary}
 \label{sec:fss-2d}
 \begin{figure}
@@ -1027,6 +953,81 @@ An implementation of the precise continuous algorithm in Common Lisp for sets
 with smooth boundary is available on GitHub\cite{diff-boundary-corrfn}. Improved
 digital approach for both $F_{ss}$ and $F_{sss}$ is now part of open source
 package CorrelationFunctions.jl written in Julia \cite{CFs.jl}.
+
+\appendix
+\section{Dual numbers and automatic differentiation}
+\label{sec:dual}
+A ring of dual numbers $D$ is a set of pairs of real numbers $(a, b)$ with two
+binary operations: $+$ (addition) and $\cdot$ (multiplication) where
+multiplication works according to the following law:
+\begin{equation}
+  (a, b)\cdot(c, d) = (ac, ad + bc)
+\end{equation}
+It's easy to see that $D$ is commutative.
+
+It is also useful to introduce an imaginary unit $\varepsilon$ and write a dual
+number $(a, b)$ as $a + b\varepsilon$. As follows from the multiplication law,
+$1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
+integral domain and division is defined only if divisor has non-zero real part:
+\begin{equation}
+  \begin{aligned}
+    \frac{a+b\varepsilon}{c+d\varepsilon} &=
+    \frac{(a+b\varepsilon)(c-d\varepsilon)}{(c+d\varepsilon)(c-d\varepsilon)} \\
+    &= \frac{ac-ad\varepsilon+bc\varepsilon}{c^2} \\
+    &= \frac{a}{c} + \frac{bc-ad}{c^2}\varepsilon
+  \end{aligned}
+\end{equation}
+
+Now we consider functions of dual variable $x + y\varepsilon$. Power function
+$(x + y\varepsilon)^n$ where $n \in \mathbb{N}$ can be defined using binomial
+formula and keeping in mind that $\varepsilon^n = 0$ if $n>1$:
+\begin{equation}
+  (x + y\varepsilon)^n = \sum_{k=0}^n \binom{n}{k} x^k (y\varepsilon)^{n-k} =
+  x^n + n x^{n-1} y \varepsilon
+\end{equation}
+This formula can be extended to $n \in \mathbb{Q}$ as well.
+
+Elementary functions can be extended to dual numbers using Taylor series (here
+$a$ is some point at which $f$ is differentiable):
+\begin{equation}
+  \begin{aligned}
+    f(x + y\varepsilon) &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x + y\varepsilon)^2 \\
+    & \qquad + \frac{f'''(a)}{3!}(x + y\varepsilon)^3 + \dots \\
+    &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x^2 + 2xy\varepsilon) \\
+    & \qquad + \frac{f'''(a)}{3!}(x^3 + 3x^2y\varepsilon) + \dots \\
+    &= f(a) + f'(a)x + \frac{f''(a)}{2!}x^2 + \frac{f'''(a)}{3!}x^3 + \dots \\
+    & \quad y\varepsilon(f'(a) + f''(a)x + \frac{f'''(a)}{2!}x^2 + \dots) \\
+    &= f(x) + yf'(x)\varepsilon
+  \end{aligned}
+\end{equation}
+
+Most useful basic rules for working with dual numbers can be summarized as follows:
+\begin{itemize}
+\item $(a + b\varepsilon) + (c + d\varepsilon) = (a + c) + (b + d)\varepsilon$
+\item $(a + b\varepsilon) (c + d\varepsilon) = ac + (ad + bc)\varepsilon$
+\item $\frac{a + b\varepsilon}{c + d\varepsilon} = \frac{a}{c} + \frac{bc - ad}{c^2}$
+\item $\exp(a + b\varepsilon) = \exp(a) + b\varepsilon\exp(a)$
+\item $\sin(a + b\varepsilon) = \sin(a) + b\varepsilon\cos(a)$
+\item $\cos(a + b\varepsilon) = \cos(a) - b\varepsilon\sin(a)$
+\item $\tan(a + b\varepsilon) = \tan(a) - \frac{b}{cos^2(a)}\varepsilon$
+\end{itemize}
+
+As is evident from these rules, dual numbers are connected with
+differentiation. Using a dual argument $a + \varepsilon$ we can compute a value
+of a function at point $x = a$ and its derivative at that point:
+$f(a + \varepsilon) = f(a) + f'(a)\varepsilon$. Also, we can compute a partial
+derivative of a multivariate function. For example:
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial}{\partial x} f(x, y) \vert_{x = a, y = b} &= f(a + \varepsilon,
+    b) \\
+    \frac{\partial}{\partial y} f(x, y) \vert_{x = a, y = b} &= f(a, b +
+    \varepsilon)
+  \end{aligned}
+  \label{eq:autonormals}
+\end{equation}
+This last equation is the main result of this appendix and can be used for
+computation of normals to the interface.
 
 \bibliography{paper}
 \end{document}
