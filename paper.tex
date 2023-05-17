@@ -203,8 +203,8 @@ area. SI units of measurement for these functions are $m^{-1}$ for $F_{sv}$
 and $m^{-2}$ for $F_{ss}$. In practice non-standard units of measurement can be
 used instead.
 
-Another function studied in this paper is surface-surface-surface function
-$F_{sss}$. It is defined as follows:
+Another function studied in this paper is three-point surface-surface-surface
+correlation function $F_{sss}$. It is defined as follows:
 \begin{equation}
   F_{sss}(\bm{r_1}, \bm{r_2}) = \langle M_S(\bm{x}) M_S(\bm{x} + \bm{r_1})
   M_S(\bm{x} + \bm{r_2}) \rangle
@@ -220,7 +220,7 @@ arguments $r_1 = |\bm{r_1}|$, $r_2 = |\bm{r_2}|$ and $r_3 = |\bm{r_1} - \bm{r_2}
 are required. The last argument can be replaced with an angle $\theta$ between
 vectors $\bm{r_1}$ and $\bm{r_2}$:
 \begin{equation}
-  F_{sss}(r_1, r_2, r_3) = F_{sss}(r_1, r_2, \theta) = F_{sss}(\bm{r_1}, \bm{r_2})
+  F_{sss}(\bm{r_1}, \bm{r_2}) = F_{sss}(r_1, r_2, r_3) = F_{sss}(r_1, r_2, \theta)
 \end{equation}
 
 
@@ -229,13 +229,13 @@ More detailed information on surface correlation functions can be found in
 
 \section{Computation of surface functions for digital images}
 \label{sec:algo}
-Here we briefly describe the algorithm for computation of surface-surface,
-surface-void and surface-surface-surface correlation functions for digital
-images of porous media \cite{Samarin}. This discrete algorithm can calculate
-surface correlation functions for all possible directions and correlation
-lengths. It consists of two steps: edge detection and computation of
-autocorrelation. Next, we present some improvements in this approach that later
-will be verified with the help of exact continuous method.
+Here we briefly describe the algorithm for computation of $F_{ss}$, $F_{sv}$ and
+$F_{sss}$ correlation functions for digital images of porous media
+\cite{Samarin}. This discrete algorithm calculates surface correlation functions
+for all possible directions and correlation lengths. It consists of two steps:
+edge detection and computation of autocorrelation. Next, we present some
+improvements in this approach that later will be verified with the help of exact
+continuous method.
 
 \subsection{Discrete method details}
 We consider an image of porous medium in the form of two- or three-dimensional bit
@@ -360,7 +360,7 @@ calculating a convolution using its definition:
 This algorithm can be vectorized and therefore benefits from the usage of
 GPUs. Shift function in this algorithm must be a circular shift which
 ``rotates'' content of the array, if periodic boundary conditions are
-desired. For our purpose we use $F_{sss}$ function in the form
+desired. For our purpose we represent $F_{sss}$ function in the form
 $F_{sss}(r_1, r_2, \theta)$ and fix $\theta = \pi/2$. This leads us to a
 sampling pattern shown on \cref{fig:Fsss-pattern}
 \begin{figure}
@@ -421,7 +421,7 @@ between black and white areas cross each other at the angle $\phi$. We apply an
 edge detection filter to each image, multiply results element-wise and sum all
 elements of the product. We want the resulting value to approximate
 $1/\sin \phi$. As can be seen on \cref{fig:filter-comparison} $H'$ does this job
-better than $H$. Why this is important will be explained in the next section.
+better than $H$. Why this is important will be explained in \cref{sec:fss-2d}.
 \begin{figure}
   \centering
   \includegraphics[width=0.8\linewidth]{images/filter-comparison.png}
