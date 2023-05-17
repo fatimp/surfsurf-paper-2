@@ -238,10 +238,11 @@ improvements in this approach that later will be verified with the help of exact
 continuous method.
 
 \subsection{Discrete method details}
-We consider an image of porous medium in the form of two- or three-dimensional bit
-array $A$ as the input to our algorithm. In the first stage, we convolve the
-input with high-pass filter to extract edges from the image. In our previous
-paper \cite{Samarin} we used the following filter kernel $H$:
+We consider a binary image (i.~e. an image which uses only two colors) in the
+form of two- or three-dimensional bit array $A$ as the input to our
+algorithm. In the first stage, we convolve the input with high-pass filter to
+extract edges from the image. In our previous paper \cite{Samarin} we used the
+following filter kernel $H$:
 \begin{equation}
   \begin{aligned}
     H_{ij} &= \frac{1}{6} \left[
@@ -451,7 +452,7 @@ accuracy in general is still an open question. In this section we develop a
 universal test case and novel exact algorithm for calculation of $F_{ss}$ and
 $F_{sss}$ functions for two- and three-dimensional sets with smooth boundary.
 
-\subsection{Surface-surface function for two-dimensional sets with smooth boundary}
+\subsection{$F_{ss}$ function for two-dimensional sets with smooth boundary}
 \label{sec:fss-2d}
 \begin{figure}
   \centering
@@ -575,8 +576,8 @@ which can now be replaced by a single equation:
 We denote a set of solutions of this equation as $X$. For every $\bm{x}_i \in X$
 we find normals to the boundary and the boundary translated by a vector
 $\bm{r}$. These normals can be found using automatic differentiation and dual
-numbers described in \cref{sec:dual}. Then we normalize these normals (i.e. make
-their length equal to $1$) and use \cref{eq:fss-2d} to calculate $F_{ss}$.
+numbers described in \ref{sec:dual}. Then we normalize these vectors and use
+\cref{eq:fss-2d} to calculate $F_{ss}$.
 
 Summarizing, the algorithm of calculating $F_{ss}(\bm{r})$ is the following:
 \begin{enumerate}
@@ -594,8 +595,7 @@ all cases in this work) and then using these points as starting points for some
 algorithm based on gradient descent (ADAM \cite{adam} was used in this work) to
 solve \cref{eq:inter}.
 
-\subsection{Surface-surface-surface function for three-dimensional sets with
-  smooth boundary}
+\subsection{$F_{sss}$ function for three-dimensional sets with smooth boundary}
 \label{sec:fsss-3d}
 Results of this section are made by analogy with \cref{sec:fss-2d}. Again, let
 $S$ be some set in $\mathbb{R}^3$ which has a smooth boundary, i.e. has a
@@ -740,8 +740,8 @@ If $\bm{x} \in \mathbb{R}^3$ then an inequation $f(\bm{x}) \le R^2$ defines a
 ball. In this case we provide a comparison (\cref{fig:fsss-ball}) of the
 algorithm in \cref{sec:algo} with the precise algorithm in
 \cref{sec:fsss-3d}. There is no known analytical solution for 3D ball (one could
-derive a solution in analogy with 2D case \cite{Torquato_book}, but this is a
-non-trivial task well beyond the scope of the current work).
+derive a solution in analogy with 2D case \cite{Torquato_book}, but this is
+beyond the scope of the current work).
 \begin{figure*}[!hpt]
   \centering
   \includegraphics[width=0.45\linewidth]{images/ball-sss.png}
@@ -875,38 +875,39 @@ in higher accuracies with the help of error metric:
   \label{eq:error}
 \end{equation}
 where $x_i$ belong to a set $(\epsilon, 2R - \epsilon)$. Taking
-$\epsilon = 0.01$ we obtain the +$error = 0.05$ for filter $H$ and $error = 0.03$ for
-filter $H'$, respectively. Calculation of surface-void function also benefits from the new
-filter (\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
+$\epsilon = 0.01$ we obtain the error equal to 0.05 for filter $H$ and 0.03 for
+filter $H'$, respectively. Calculation of surface-void function also benefits
+from the new filter (\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
 
-However, the $H'$ filter has some drawbacks as compared to
-$H$. Firstly, $H$ has faster convergence with increase of image resolution. 
-Secondly, $H'$ behaves worse that $H$ in points
-of discontinuity of $F_{ss}$ for low resolutions as can be seen on \cref{fig:fss-disk}.
-To explore such effects we appeal to the criterion $C_{0.5}$ \cite{Samarin} developed to
-determine if an image is suitable for robust surface correlation functions assessment. This
-parameter is defined as:
+However, the $H'$ filter has some drawbacks as compared to $H$. Firstly, $H$ has
+faster convergence with increase of image resolution.  Secondly, $H'$ behaves
+worse that $H$ in points of discontinuity of $F_{ss}$ for low resolutions as can
+be seen on \cref{fig:fss-disk}.  To explore such effects we appeal to the
+criterion $C_{0.5}$ \cite{Samarin} developed to determine if an image is
+suitable for robust surface correlation functions assessment. This parameter is
+defined as:
 \begin{equation}
   C_{0.5} = \frac{\text{Power of the lower half of the image's
       spectrum}}{\text{Power of the image}}
 \end{equation}
-In this expression the part of ``Power of the image'' refers to $L^2$ norm
-of the image and ``the lower half of the \dots spectrum'' is the part of the
+In this expression the part of ``Power of the image'' refers to $L^2$ norm of
+the image and ``the lower half of the \dots spectrum'' is the part of the
 spectrum (Fourier image) with frequencies $[-\omega_N/2, \omega_N/2]$ where
 $\omega_N$ is a Nyquist frequency of the image. It's important to firstly
-subtract the zeroth frequency (mean value) from the image before the calculation of
-$C_{0.5}$ is executed. The image is suitable for processing if the acceptance criterion
-$C_{0.5} > 0.97$ holds. This criterion works for both filters $H$ and $H'$, but
-$H$ results in smaller error when $C_{0.5}$ is slightly less than 0.97. For
-example, consider images of a disk used for calculation of $F_{ss}$ on
-\cref{fig:fss-disk}. On \cref{fig:error} we provide values of $C_{0.5}$ for
-this image (for variety of resolutions) and relative errors in $F_{ss}$ (\cref{eq:error}) 
-for both filters. It can be seen that $H$ gives twice the lower error than $H'$ when used
-for an image with $C_{0.5} \approx 0.82$.
+subtract the zeroth frequency (mean value) from the image before the calculation
+of $C_{0.5}$ is executed. The image is suitable for processing if the acceptance
+criterion $C_{0.5} > 0.97$ holds. This criterion works for both filters $H$ and
+$H'$, but $H$ results in smaller error when $C_{0.5}$ is slightly less than
+0.97. For example, consider images of a disk used for calculation of $F_{ss}$ on
+\cref{fig:fss-disk}. On \cref{fig:error} we provide values of $C_{0.5}$ for this
+image (for variety of resolutions) and relative errors in $F_{ss}$
+(\cref{eq:error}) for both filters. It can be seen that $H$ gives twice the
+lower error than $H'$ when used for an image with $C_{0.5} \approx 0.82$.
 
-In short, for images of acceptable quality the $H'$ filter is superior. Images with insufficient
-resolution benefit from downscaling prior to correlation functions evalution \cite{Samarin} (and 
-then again new filter will provide better results).
+In short, for images of acceptable quality the $H'$ filter is superior. Images
+with insufficient resolution benefit from downscaling prior to correlation
+functions evalution \cite{Samarin} (and then again new filter will provide
+better results).
 
 \begin{figure*}[!hpt]
   \centering
@@ -955,9 +956,10 @@ calculations of surface-surface and surface-void correlation functions for
 digital binary images with the help of proposed $H'$ filter.
 
 An implementation of the precise continuous algorithm in Common Lisp for sets
-with smooth boundary is available on GitHub\cite{diff-boundary-corrfn}. Improved
-digital approach for both $F_{ss}$ and $F_{sss}$ is now part of open source
-package CorrelationFunctions.jl written in Julia \cite{CFs.jl}.
+with smooth boundary is available on GitHub
+\cite{diff-boundary-corrfn}. Improved digital approach for both $F_{ss}$ and
+$F_{sss}$ is now part of open source package CorrelationFunctions.jl written in
+Julia \cite{CFs.jl}.
 
 \appendix
 \section{Dual numbers and automatic differentiation}
