@@ -172,16 +172,20 @@ defined as follows:
   \end{array}
   \right.
 \end{equation}
+An absolute value of its gradient (in the sense of distributions) is denoted
+as $M$:
+\begin{equation}
+  M_A(\bm{x}) = |\nabla \chi_A(\bm{x})|
+\end{equation}
 
 Now we define two disjoint sets in a homogeneous porous medium: a set of solid
 phase $S$ and a set of void phase $V$. Surface-surface correlation function
 $F_{ss}$ and surface-void correlation function $F_{sv}$ are then defined as
 follows: \cite{Torquato_book}
 \begin{align}
-  F_{ss}(\bm{r}) &= \langle |\nabla \chi_S(\bm{x})| |\nabla \chi_S(\bm{x} +
-  \bm{r})| \rangle \label{eq:fss} \\
-  F_{sv}(\bm{r}) &= \langle |\nabla \chi_S(\bm{x})| \chi_V(\bm{x} +
-  \bm{r}) \rangle \label{eq:fsv}
+  F_{ss}(\bm{r}) &= \langle M_S(\bm{x}) M_S(\bm{x} + \bm{r}) \rangle \label{eq:fss} \\
+  F_{sv}(\bm{r}) &= \langle M_S(\bm{x}) \chi_V(\bm{x} + \bm{r}) \rangle
+  \label{eq:fsv}
 \end{align}
 Here the brackets $\langle \dots \rangle$ denote ensemble average. If the medium
 under consideration is also isotropic, the argument in functions $F_{ss}$ and
@@ -202,10 +206,9 @@ used instead.
 Another function studied in this paper is surface-surface-surface function
 $F_{sss}$. It is defined as follows:
 \begin{equation}
-  F_{sss}(\bm{r_1}, \bm{r_2}) = \langle |\nabla \chi_S(\bm{x})|
-  |\nabla \chi_S(\bm{x} + \bm{r_1})|
-  |\nabla \chi_S(\bm{x} + \bm{r_2})|
-  \rangle \label{eq:fsss}
+  F_{sss}(\bm{r_1}, \bm{r_2}) = \langle M_S(\bm{x}) M_S(\bm{x} + \bm{r_1})
+  M_S(\bm{x} + \bm{r_2}) \rangle
+  \label{eq:fsss}
 \end{equation}
 This function is defined for media with dimensionality 3 or higher and is a
 physical quantity inversely proportional to volume. SI units for $F_{sss}$ are
