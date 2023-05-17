@@ -164,14 +164,14 @@ paper concludes with discussion, outline and summary in \cref{sec:summary}.
 Let $A$ be a set in Euclidean space $\mathbb{R}^n$. A function
 $\chi_A(\mathbf{x})$ is called an indicator function for the set $A$ and is
 defined as follows:
-\begin{equation*}
+\begin{equation}
   \chi_A(\bm{x}) = \left\{
   \begin{array}{ll}
     1 & \quad \bm{x} \in A \\
     0 & \quad \text{otherwise}
   \end{array}
   \right.
-\end{equation*}
+\end{equation}
 
 Now we define two disjoint sets in a homogeneous porous medium: a set of solid
 phase $S$ and a set of void phase $V$. Surface-surface correlation function
@@ -186,10 +186,10 @@ follows: \cite{Torquato_book}
 Here the brackets $\langle \dots \rangle$ denote ensemble average. If the medium
 under consideration is also isotropic, the argument in functions $F_{ss}$ and
 $F_{sv}$ can be replaced with a scalar $r = |\bm{r}|$:
-\begin{align*}
+\begin{align}
   F_{ss}(r) &= F_{ss}(\bm{r}) \\
   F_{sv}(r) &= F_{sv}(\bm{r})
-\end{align*}
+\end{align}
 In case correlation functions are computed in predefined directions, scalar
 values can be also used for anisotropic structures
 \cite{jiao2014chawla,EPL1}. These functions are defined for media with
@@ -216,9 +216,9 @@ However, if the medium under consideration is isotropic, only three scalar
 arguments $r_1 = |\bm{r_1}|$, $r_2 = |\bm{r_2}|$ and $r_3 = |\bm{r_1} - \bm{r_2}|$
 are required. The last argument can be replaced with an angle $\theta$ between
 vectors $\bm{r_1}$ and $\bm{r_2}$:
-\begin{equation*}
+\begin{equation}
   F_{sss}(r_1, r_2, r_3) = F_{sss}(r_1, r_2, \theta) = F_{sss}(\bm{r_1}, \bm{r_2})
-\end{equation*}
+\end{equation}
 
 
 More detailed information on surface correlation functions can be found in
@@ -270,32 +270,35 @@ paper \cite{Samarin} we used the following filter kernel $H$:
 \end{equation}
 Here symbol $;$ denotes concatenation along the third dimension. Edge extraction
 is performed as follows:
-\begin{align*}
-  A'_{lm}  &= \left| \sum_i\sum_j A_{l-i, m-j}H_{ij} \right| \quad \text{for 2D} \\
-  A'_{lmn} &= \left| \sum_i\sum_j\sum_k A_{l-i, m-j, n-k}H_{ijk} \right| \quad
-  \text{for 3D}
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    A'_{lm}  &= \left| \sum_i\sum_j A_{l-i, m-j}H_{ij} \right| \quad \text{for 2D} \\
+    A'_{lmn} &= \left| \sum_i\sum_j\sum_k A_{l-i, m-j, n-k}H_{ijk} \right| \quad \text{for 3D}
+  \end{aligned}
+\end{equation}
 Therefore $A'$ has non-zero elements only in a small area around interface
 between phases in $A$. This operation is convolution of a filter $H$ with an
 image $A$ and can be performed using Fourier transform:
-\begin{equation*}
+\begin{equation}
   A' = |H*A| = |F^{-1}[F[H] F[A]]|
-\end{equation*}
+\end{equation}
 Here $F$ is a forward Fourier transform and $F^{-1}$ is its inverse.
 
 Next, we calculate autocorrelation for $A'$ and divide it by a
 total number of elements in $A$:
-\begin{align*}
-  F_{{ss}_{lm}} &= \frac{1}{N} \sum_i \sum_j A'_{ij}A'_{i+l, j+m} \quad
-  \text{for 2D} \\
-  F_{{ss}_{lmn}} &= \frac{1}{N} \sum_i \sum_j \sum_k A'_{ijk}A'_{i+l, j+m, k+n}
-  \quad \text{for 3D}
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    F_{{ss}_{lm}} &= \frac{1}{N} \sum_i \sum_j A'_{ij}A'_{i+l, j+m} \quad
+    \text{for 2D} \\
+    F_{{ss}_{lmn}} &= \frac{1}{N} \sum_i \sum_j \sum_k A'_{ijk}A'_{i+l, j+m,
+      k+n} \quad \text{for 3D}
+  \end{aligned}
+\end{equation}
 Calculation of sums in the latter equations can be performed using the following
 properties of Fourier transform (here $\hat{f}(z) = F[f(x)]$):
-\begin{equation*}
+\begin{equation}
   F[f(x) \star f(x)] = F[f(x) * f(-x)] = \hat{f}(z)\overline{\hat{f}(z)} = |\hat{f}(z)|^2
-\end{equation*}
+\end{equation}
 
 Putting everything together, we obtain the following algorithm for calculation
 of $F_{ss}$ function:
@@ -450,42 +453,46 @@ $F_{sss}$ functions for two- and three-dimensional sets with smooth boundary.
 A ring of dual numbers $D$ is a set of pairs of real numbers $(a, b)$ with two
 binary operations: $+$ (addition) and $\cdot$ (multiplication) where
 multiplication works according to the following law:
-\begin{equation*}
+\begin{equation}
   (a, b)\cdot(c, d) = (ac, ad + bc)
-\end{equation*}
+\end{equation}
 It's easy to see that $D$ is commutative.
 
 It is also useful to introduce an imaginary unit $\varepsilon$ and write a dual
 number $(a, b)$ as $a + b\varepsilon$. As follows from the multiplication law,
 $1\cdot \varepsilon = \varepsilon$ and $\varepsilon^2 = 0$, hence $D$ is not an
 integral domain and division is defined only if divisor has non-zero real part:
-\begin{align*}
-  \frac{a+b\varepsilon}{c+d\varepsilon} &=
-  \frac{(a+b\varepsilon)(c-d\varepsilon)}{(c+d\varepsilon)(c-d\varepsilon)} \\
-  &= \frac{ac-ad\varepsilon+bc\varepsilon}{c^2} \\
-  &= \frac{a}{c} + \frac{bc-ad}{c^2}\varepsilon
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    \frac{a+b\varepsilon}{c+d\varepsilon} &=
+    \frac{(a+b\varepsilon)(c-d\varepsilon)}{(c+d\varepsilon)(c-d\varepsilon)} \\
+    &= \frac{ac-ad\varepsilon+bc\varepsilon}{c^2} \\
+    &= \frac{a}{c} + \frac{bc-ad}{c^2}\varepsilon
+  \end{aligned}
+\end{equation}
 
 Now we consider functions of dual variable $x + y\varepsilon$. Power function
 $(x + y\varepsilon)^n$ where $n \in \mathbb{N}$ can be defined using binomial
 formula and keeping in mind that $\varepsilon^n = 0$ if $n>1$:
-\begin{equation*}
+\begin{equation}
   (x + y\varepsilon)^n = \sum_{k=0}^n \binom{n}{k} x^k (y\varepsilon)^{n-k} =
   x^n + n x^{n-1} y \varepsilon
-\end{equation*}
+\end{equation}
 This formula can be extended to $n \in \mathbb{Q}$ as well.
 
 Elementary functions can be extended to dual numbers using Taylor series (here
 $a$ is some point at which $f$ is differentiable):
-\begin{align*}
-  f(x + y\varepsilon) &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x + y\varepsilon)^2 \\
-  & \qquad + \frac{f'''(a)}{3!}(x + y\varepsilon)^3 + \dots \\
-  &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x^2 + 2xy\varepsilon) \\
-  & \qquad + \frac{f'''(a)}{3!}(x^3 + 3x^2y\varepsilon) + \dots \\
-  &= f(a) + f'(a)x + \frac{f''(a)}{2!}x^2 + \frac{f'''(a)}{3!}x^3 + \dots \\
-  & \quad y\varepsilon(f'(a) + f''(a)x + \frac{f'''(a)}{2!}x^2 + \dots) \\
-  &= f(x) + yf'(x)\varepsilon
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    f(x + y\varepsilon) &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x + y\varepsilon)^2 \\
+    & \qquad + \frac{f'''(a)}{3!}(x + y\varepsilon)^3 + \dots \\
+    &= f(a) + f'(a)(x + y\varepsilon) + \frac{f''(a)}{2!}(x^2 + 2xy\varepsilon) \\
+    & \qquad + \frac{f'''(a)}{3!}(x^3 + 3x^2y\varepsilon) + \dots \\
+    &= f(a) + f'(a)x + \frac{f''(a)}{2!}x^2 + \frac{f'''(a)}{3!}x^3 + \dots \\
+    & \quad y\varepsilon(f'(a) + f''(a)x + \frac{f'''(a)}{2!}x^2 + \dots) \\
+    &= f(x) + yf'(x)\varepsilon
+  \end{aligned}
+\end{equation}
 
 Most useful basic rules for working with dual numbers can be summarized as follows:
 \begin{itemize}
@@ -553,11 +560,13 @@ boundary $\Gamma$.
   \label{fig:fss-zoomed}
 \end{figure}
 Now define a functional sequence $F_{ss}(\bm{r}; \Delta)$:
-\begin{align*}
-  F_{ss}(\bm{r}; \Delta) &= \int\int f_\Gamma(\bm{x}; \Delta) f_\Gamma(\bm{x}
-  + \bm{r}; \Delta) dx dy \\
-  &= \sum_{k=1}^N S_k/\Delta^2
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    F_{ss}(\bm{r}; \Delta) &= \int\int f_\Gamma(\bm{x}; \Delta) f_\Gamma(\bm{x}
+    + \bm{r}; \Delta) dx dy \\
+    &= \sum_{k=1}^N S_k/\Delta^2
+  \end{aligned}
+\end{equation}
 Here $N$ is a number of intersections of $\Gamma$ with itself translated by a
 vector $\bm{r}$ and $S_k$ is a surface of each such intersection (see
 \cref{fig:Fss-explained}).
@@ -584,13 +593,15 @@ intersection such as $|a| = |b| = 1$. If $F_{ss}$ is defined at the point of
 consideration then $\bm{a} \ne \pm \bm{b}$. The pair $(\bm{a}, \bm{b})$ may
 serve as a basis with the following transformation from the basis
 $(1,0), (0,1)$:
-\begin{align*}
-  x' &= f(x, y) = a_x x + a_y y \\
-  y' &= g(x, y) = b_x x + b_y y
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    x' &= f(x, y) = a_x x + a_y y \\
+    y' &= g(x, y) = b_x x + b_y y
+  \end{aligned}
+\end{equation}
 where $\bm{a} = (a_x, a_y)$, $\bm{b} = (b_x, b_y)$. Jacobian determinant for
 this transformation is:
-\begin{equation*}
+\begin{equation}
   J = \left|
   \begin{array}{cc}
     \frac{\partial f}{\partial x} & \frac{\partial f}{\partial y} \\
@@ -603,7 +614,7 @@ this transformation is:
     b_x & b_y
   \end{array}
   \right| = a_x b_y - a_y b_x
-\end{equation*}
+\end{equation}
 
 We can rewrite \cref{eq:fss-2d-sin} using $J$ as follows:
 \begin{equation}
@@ -620,14 +631,14 @@ function differentiable at points where $f(x, y) = T$ and $T$ is some
 threshold. Let's calculate surface-surface function for this set at a point
 $\bm{r} = (r_x, r_y)$. We find all intersections between a boundary $\Gamma$ and
 its translated version by solving a system of equations:
-\begin{equation*}
+\begin{equation}
   \left\{
   \begin{array}{l}
     f(x, y) = T \\
     f(x-r_x, y-r_y) = T
   \end{array}
   \right.
-\end{equation*}
+\end{equation}
 which can now be replaced by a single equation:
 \begin{equation}
   (f(x, y) - T)^2 + (f(x-r_x, y-r_y) - T)^2 = 0 \label{eq:inter}
@@ -662,42 +673,46 @@ $S$ be some set in $\mathbb{R}^3$ which has a smooth boundary, i.e. has a
 tangent plane at almost every point of its boundary. Using the function
 \cref{eq:delta-sequence} we define a functional sequence
 $F_{sss}(\bm{r_1}, \bm{r_2}; \Delta)$:
-\begin{align*}
-  F_{sss}(\bm{r_1}, \bm{r_2}; \Delta) &= \int\int\int dx dy dz \times \\
-  &\qquad \times f_\Gamma(\bm{x}; \Delta) f_\Gamma(\bm{x} + \bm{r_1}; \Delta)
-  f_\Gamma(\bm{x} + \bm{r_2}; \Delta) \\
-  &= \sum_{k=1}^N V_k/\Delta^3
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    F_{sss}(\bm{r_1}, \bm{r_2}; \Delta) &= \int\int\int dx dy dz \times \\
+    &\qquad \times f_\Gamma(\bm{x}; \Delta) f_\Gamma(\bm{x} + \bm{r_1}; \Delta)
+    f_\Gamma(\bm{x} + \bm{r_2}; \Delta) \\
+    &= \sum_{k=1}^N V_k/\Delta^3
+  \end{aligned}
+\end{equation}
 where $V_k$ is a volume of parallelepiped where all three multiplicands under
 integral are non-zero. $N$ is a number of these parallelepipeds, i.e. number of
 points where all three boundaries (one ``original'' boundary and two translated
 versions) have an intersection. With $\Delta$ going to zero we get a convergence
 to $F_{sss}$:
-\begin{equation*}
+\begin{equation}
   \lim_{\Delta \to 0} F_{sss}(\bm{r_1}, \bm{r_2}; \Delta) = F_{sss}(\bm{r_1},
   \bm{r_2})
-\end{equation*}
+\end{equation}
 
 Let $\bm{a}$, $\bm{b}$ and $\bm{c}$ be normalized normals to each boundary in
 the point of intersection. The corresponding $V_k$ is finite if and only if
 $\bm{a} \ne \pm \bm{b} \ne \pm \bm{c}$. In this case we can use a triplet
 $(\bm{a}, \bm{b}, \bm{c})$ as basis for $\mathbb{R}^3$ with the following
 transformation from the basis $(1,0,0), (0,1,0), (0, 0, 1)$:
-\begin{align*}
-  x' &= f(x, y) = a_x x + a_y y + a_z z \\
-  y' &= g(x, y) = b_x x + b_y y + b_z z \\
-  z' &= h(x, y) = c_x x + c_y y + c_z z \\
-\end{align*}
+\begin{equation}
+  \begin{aligned}
+    x' &= f(x, y) = a_x x + a_y y + a_z z \\
+    y' &= g(x, y) = b_x x + b_y y + b_z z \\
+    z' &= h(x, y) = c_x x + c_y y + c_z z
+  \end{aligned}
+\end{equation}
 The Jacobian determinant for this transformation is:
-\begin{equation*}
+\begin{equation}
   J = \left|
   \begin{array}{ccc}
     a_x & a_y & a_z \\
     b_x & b_y & b_z \\
-    c_x & c_y & c_z \\
+    c_x & c_y & c_z
   \end{array}
   \right|
-\end{equation*}
+\end{equation}
 and the expression for $F_{sss}$ becomes:
 \begin{equation}
   F_{sss}(\bm{r_1}, \bm{r_2}) = \sum_{k=1}^N \frac{1}{|J_k|} \label{eq:fsss-3d}
@@ -721,7 +736,7 @@ where $\bm{x} \in \mathbb{R}^2$ is a square with side $2T$. The function $f$ is
 differentiable at all points where $f(\bm{x}) = T$ with exception to points
 $(-T, -T)$, $(-T, T)$, $(T, -T)$ and $(T, T)$. The surface-surface correlation
 function for a square is equal to:
-\begin{equation*}
+\begin{equation}
   F_{ss}(\bm{r}) = \left\{
   \begin{array}{ll}
     2 & \quad f(\bm{r}) < 2T \ \text{and}\ r_i \ne 0, \forall i \in \overline{1,2} \\
@@ -729,7 +744,7 @@ function for a square is equal to:
     \text{undefined} & \quad \text{otherwise}
   \end{array}
   \right.
-\end{equation*}
+\end{equation}
 A graphical diagram depicting this case is shown on \cref{fig:fss-square}. In
 this case the algorithm described in \cref{sec:algo} gives a correct result in
 any point which is few pixels away from where $F_{ss}$ is undefined.
@@ -748,7 +763,7 @@ any point which is few pixels away from where $F_{ss}$ is undefined.
 A set $f(\bm{x}) \le T$ where $\bm{x} \in \mathbb{R}^3$ is a cube with the same
 side $2T$.
 The surface-surface-surface correlation function for this cube is equal to:
-\begin{equation*}
+\begin{equation}
   F_{sss}(\bm{r}) = \left\{
   \begin{array}{ll}
     2 & \quad f(\bm{r}) < 2T \ \text{and}\ r_i \ne 0, \forall i \in \overline{1,3} \\
@@ -756,7 +771,7 @@ The surface-surface-surface correlation function for this cube is equal to:
     \text{undefined} & \quad \text{otherwise}
   \end{array}
   \right.
-\end{equation*}
+\end{equation}
 This case is also handled perfectly by the algorithm described in
 \cref{sec:algo}. Plot of $F_{sss}$ for the cube is trivially similar to
 \cref{fig:fss-square} and, thus, not shown here. We conclude that all approaches
@@ -766,14 +781,14 @@ perform equally accurately for this simple test.
 Define $f(\bm{x}) = \sum_i x_i^2$. If $\bm{x} \in \mathbb{R}^2$ when an
 inequation $f(\bm{x}) \le R^2$ defines a disk of radius $R$ with the center at
 the origin. In this case $F_{ss}$ depends only on distance $r$ from the origin:
-\begin{equation*}
+\begin{equation}
   F_{ss}(r) = \left\{
   \begin{array}{ll}
     \frac{4R^2}{r\sqrt{4R^2-r^2}} & \quad r < 2R \\
     0 & \quad \text{otherwise}
   \end{array}
   \right.
-\end{equation*}
+\end{equation}
 The comparison of the algorithm described in \cref{sec:algo} applied to images
 with different resolution against theory is shown on \cref{fig:fss-disk}.
 Continuous approach results for the disk coincide with analytical $F_{ss}$ function.
@@ -835,9 +850,9 @@ with new edge filter outperforming $H$.
 \end{figure*}
 Let us now consider more complex surfaces, including concave shapes. Take $N$
 random values of each of $a_i$, $b_i$ and $\sigma_i$. Let $f$ be:
-\begin{equation*}
+\begin{equation}
   f(x,y) = \sum_{i=1}^N \frac{1}{\sigma_i} \exp(\frac{-(x-a_i)^2-(y-b_i)^2}{\sigma_i^2})
-\end{equation*}
+\end{equation}
 Inequality $f(x,y) \le T$ defines a ``blob'' like one which can be seen on
 \cref{fig:blob}. We can use the algorithm developed in \cref{sec:fss-2d} to
 compute precise values of $F_{ss}$ for this blob and compare them with values
@@ -862,13 +877,13 @@ comparison is presented on \cref{fig:fss-blob}.
 \subsection{Ellipses}
 \label{sec:ellipses}
 Take $N$ random values $a_i$, $b_i$, $c_i$, $x^c_i$ and $y^c_i$ and define
-\begin{equation*}
+\begin{equation}
   f_i(x, y) = a_i(x-x^c_i)^2 + b(x-x^c_i)(y-y^c_i) + c_i(y-y^c_i)^2
-\end{equation*}
+\end{equation}
 with $a_ic_i - b_i^2 > 0$. Inequation
-\begin{equation*}
+\begin{equation}
   \min_i f_i(x, y) < A^2
-\end{equation*}
+\end{equation}
 defines $N$ ellipses like those which can be seen on \cref{fig:ellipses}. A
 comparison between two algorithms is on \cref{fig:fss-ellipses}.
 \begin{figure*}[!hpt]
@@ -937,10 +952,10 @@ of discontinuity of $F_{ss}$ for low resolutions as can be seen on \cref{fig:fss
 To explore such effects we appeal to the criterion $C_{0.5}$ \cite{Samarin} developed to
 determine if an image is suitable for robust surface correlation functions assessment. This
 parameter is defined as:
-\begin{equation*}
+\begin{equation}
   C_{0.5} = \frac{\text{Power of the lower half of the image's
       spectrum}}{\text{Power of the image}}
-\end{equation*}
+\end{equation}
 In this expression the part of ``Power of the image'' refers to $L^2$ norm
 of the image and ``the lower half of the \dots spectrum'' is the part of the
 spectrum (Fourier image) with frequencies $[-\omega_N/2, \omega_N/2]$ where
