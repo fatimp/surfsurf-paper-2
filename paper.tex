@@ -47,21 +47,22 @@
   Surface correlation functions are extremely useful descriptors of interfaces
   and in this role can be used in material science, rock and soil physics, food
   engineering and other numerous areas. However, their widespread usage was
-  hampered by insufficiently robust computation methodologies.  In this
+  hampered by insufficiently robust computation methodologies. In this
   contribution we elaborate on recent works in surface function evaluation and
-  present a novel exact algorithm to compute $F_{ss}$ and $F_{sss}$ functions
-  for smooth boundary sets without discretization. This allows us to test
-  digital computational approach on geometries beyond those available as analytical
-  solutions. Moreover, we propose a better edge detection filter that allowed to
-  improve the quality of surface correlation functions (both surface-surface and
-  surface-void) assessment based on digital images. The code for continuous and
+  present a novel exact algorithm to compute surface-surface ($F_{ss}$) and
+  surface-surface-surface ($F_{sss}$) functions for smooth boundary sets without
+  discretization. This allows us to test digital computational approach on
+  geometries beyond those available as analytical solutions. Moreover, we
+  propose a better edge detection filter that allowed to improve the quality of
+  assessment of surface correlation functions, both surface-surface and
+  surface-void ($F_{sv}$), for digital images. The code for continuous and
   discrete computational frameworks is freely available and is now the part of
   the more general CorrelationFunctions.jl package.
 \end{abstract}
 
 \begin{keyword}
-  3D images, correlation functions, surface-surface function,
-  surface-void function, image analysis, image scaling
+  3D images, correlation functions, surface-surface function, surface-void
+  function, image analysis, image scaling
 \end{keyword}
 
 \maketitle
