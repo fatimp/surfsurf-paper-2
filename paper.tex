@@ -757,10 +757,15 @@ non-trivial task well beyond the scope of the current work).
   \label{fig:fsss-ball}
 \end{figure*}
 
-We conclude that continuous approach has zero error against analytical solution
-around can be used to assess the quality of digital approach for discretized
-sets. As expected, digital approach performance depends on the image resolution
-with new edge filter outperforming $H$.
+We conclude that if a theoretical solution is known for the correlation function
+$F_{ss}$ or $F_{sss}$, then evaluation of this function using our continuous
+approach does not differ from this theoretical solution if all crossings of
+the interface with its translated self are found correctly (which is the case
+for all sets described in this paper). This approach can be used to assess the
+quality of the algorithm for discretized sets. As expected, performance of the
+latter depends on the image resolution and the choise of an edge detection
+filter (the new filter $H'$ is preferable than $H$ for images with good
+resolution, see \cref{sec:influence}).
 
 \subsection{Gaussian mixture}
 \label{sec:gauss}
@@ -836,7 +841,7 @@ compute surface functions \cite{Samarin} that confirms the accuracy of results
 thus obtained.
 
 \subsection{Influence of filter $H'$ on computation accuracy}
-
+\label{sec:influence}
 \begin{figure*}
   \centering
   \subfigure[Surface-surface function calculated for a ball with radius
