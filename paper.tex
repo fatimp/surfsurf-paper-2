@@ -113,17 +113,17 @@ field. Samarin et al. \cite{Samarin} argued that experimental images needs
 to be segmented first using current cutting edge techniques \cite{NNseg} and
 proposed "discrete" approach. The latter allowed obtaining surface functions
 closer to analytical solutions for overlapping disks/spheres and to suppress
-noise, in particular for $F_{ss}$. The noise in Ma and Torquato method resulted
-from $1/cos(\theta)$ computations during random line segment placement - this
-leaves a room for improvements. While Samarin et al. obtained better convergence
-with analytical solution, this was demonstrated only for overlapping disks image
-of limited size (that can potentially introduce some differences between
-computations and analytical solution for infinite size structure). Moreover,
-good agreement was achieved by manually fitting the values of edge-detecting
-filter that could lack accuracy for arbitrary structure different from
-overlapping disks. In other words, we still lack robustness in surface CFs
-evaluation due to inability to directly compare "discrete" versus "continuous"
-methodology, and verify both approaches for arbitrary geometries.
+perturbation, in particular for $F_{ss}$. The perturbation in Ma and Torquato
+method resulted from $1/cos(\theta)$ computations during random line segment
+placement -- this leaves a room for improvements. While Samarin et al. obtained
+better convergence with analytical solution, this was demonstrated only for
+overlapping disks image of limited size (that can potentially introduce some
+differences between computations and analytical solution for infinite size
+structure). Moreover, good agreement was achieved by manually fitting the values
+of edge-detecting filter that could lack accuracy for arbitrary structure
+different from overlapping disks. In other words, we still lack robustness in
+surface CFs evaluation due to inability to directly compare "discrete" versus
+"continuous" methodology, and verify both approaches for arbitrary geometries.
 
 If computed accurately for any arbitrary structure at hand, surface CFs can be
 utilized in a multitude of applications:
@@ -146,17 +146,17 @@ Torquato \cite{ma2018SS} and recent findings of Samarin et al. \cite{Samarin} to
 develop a robust and efficient approach to compute surface correlation functions
 from digital 2D and 3D images. In particular, here our aim is to establish a
 direct verification of "discrete" methodology (that is easily parallelizable on
-CPU and GPU architectures) using exact noiseless "continuous" approach for
-arbitrary structures (still described by some continuous function). The rest of
-the manuscript is organized as follows: in \cref{sec:def} we introduce some
-major definitions of CFs necessary for establishing algorithms, in
-\cref{sec:algo} we describe the all methodological details for "discrete" method
-for digital images. Next, in \cref{sec:algo-precise} we explain in detail why
-verification of computational approaches for digital images is currently
-hampered, and then introduce novel exact "continuous" methodology in
-\cref{sec:fss-2d}. The choice of verification cases is presented in
-\cref{sec:results} followed by improvements in methodology of Samarin et~al. The
-paper concludes with discussion, outline and summary in \cref{sec:summary}.
+CPU and GPU architectures) using exact "continuous" approach for arbitrary
+structures (still described by some continuous function). The rest of the
+manuscript is organized as follows: in \cref{sec:def} we introduce some major
+definitions of CFs necessary for establishing algorithms, in \cref{sec:algo} we
+describe the all methodological details for "discrete" method for digital
+images. Next, in \cref{sec:algo-precise} we explain in detail why verification
+of computational approaches for digital images is currently hampered, and then
+introduce novel exact "continuous" methodology in \cref{sec:fss-2d}. The choice
+of verification cases is presented in \cref{sec:results} followed by
+improvements in methodology of Samarin et~al. The paper concludes with
+discussion, outline and summary in \cref{sec:summary}.
 
 \section{Definitions}
 \label{sec:def}
@@ -977,8 +977,8 @@ then again new filter will provide better results).
 \label{sec:summary}
 The exact continuous method presented in this paper is developed only for
 surface-surface function (and its 3-point counterpart). The surface-void
-function computations in digital manner are much more robust and exhibit no
-noise \cite{ma2018SS,Samarin}. The filter $H'$ verified for $F_{ss}$ also
+function computations in digital manner are much more robust and exhibit less
+perturbation \cite{ma2018SS,Samarin}. The filter $H'$ verified for $F_{ss}$ also
 improves calculations for $F_{sv}$ (as evident from \cref{fig:not-covered}).
 
 In addition to obvious applications of surface correlations, as described in
