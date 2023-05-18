@@ -14,7 +14,6 @@
 \usepackage{subfigure}
 \usepackage[export]{adjustbox}
 \usepackage{hyperref}
-\usepackage[inline]{enumitem}
 \usepackage{resizegather}
 \usepackage{cleveref}
 
@@ -378,12 +377,12 @@ sampling pattern shown on \cref{fig:Fsss-pattern}
 \subsection{Betterment of the discrete approach with improved edge filter}
 In this work, in addition to filter $H$, we propose an improved filter $H'$. The
 rationale behind this improvement is that:
-\begin{enumerate*}[label=\alph*)]
+\begin{itemize}
 \item a filter of width 3 may turn to be too narrow to give a good approximation
   for particular structures;
-\item filter $H$ is not invariant under rotations, i.e.
+\item The filter $H$ is not invariant under rotations, i.e.
   $H*R(A) \ne R(H*A)$, where $R$ is a rotation operator.
-\end{enumerate*}
+\end{itemize}
 Filter $H'$ has a length $7$ and all coefficients with exception to the central
 coefficient are inversely proportional to the distance from the center:
 \begin{equation}
