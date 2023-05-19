@@ -365,7 +365,7 @@ $F_{sss}(r_1, r_2, \theta)$ and fix $\theta = \pi/2$. This leads us to a
 sampling pattern shown on \cref{fig:Fsss-pattern}
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\linewidth]{images/pattern.png}
+  \includegraphics[width=0.6\linewidth]{images/pattern.png}
   \caption[]{Sampling pattern used for calculation of $F_{sss}$ in our
     implementation is a right triangle with fixed catets $r_1$ and $r_2$.
     Patterns can lie in planes $XY$ (as on the picture), $XZ$ or $YZ$. This
@@ -408,7 +408,7 @@ $30.45849$ in 2D and $172.96232$ in 3D case.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\linewidth]{images/experiment-setup.png}
+  \includegraphics[width=\linewidth]{images/experiment-setup.png}
   \caption[]{Left, center: images $Q_1$ and $Q_2$ used in the demonstration of
     approximation for $1 / \sin \phi$. Right: Interfaces between phases are
     line segments which intersect each other at angle $\phi$. Shaded area is
@@ -424,7 +424,7 @@ $1/\sin \phi$. As can be seen on \cref{fig:filter-comparison} $H'$ does this job
 better than $H$. Why this is important will be explained in \cref{sec:fss-2d}.
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\linewidth]{images/filter-comparison.png}
+  \includegraphics[width=0.6\linewidth]{images/filter-comparison.png}
   \caption[]{Estimation of $1/\sin\phi$ by filters $H$ and $H'$ for binary
     images on \cref{fig:experiment-setup}.}
   \label{fig:filter-comparison}
@@ -455,7 +455,7 @@ $F_{sss}$ functions for two- and three-dimensional sets with smooth boundary.
 \label{sec:fss-2d}
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\linewidth]{images/Fss.png}
+  \includegraphics[width=0.6\linewidth]{images/Fss.png}
   \caption[]{Illustration of how $F_{ss}(\bm{r})$ is calculated. The interface
     between solid and void phases is a solid black curve. This interface
     translated by the vector $\bm{r}$ is show as a red solid curve. Support of
@@ -479,7 +479,7 @@ boundary $\Gamma$.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\linewidth]{images/fss-zoomed.png}
+  \includegraphics[width=0.6\linewidth]{images/fss-zoomed.png}
   \caption[]{Zoomed image of intersection between the interface $\Gamma$ and its
     translated version $\Gamma'$. $\phi$ is an angle between tangent lines to
     the interfaces. Surface of dashed area is
@@ -841,21 +841,21 @@ thus obtained.
 
 \subsection{Influence of filter $H'$ on computation accuracy}
 \label{sec:influence}
-\begin{figure*}
+\begin{figure*}[!hpt]
   \centering
   \subfigure[Surface-surface function calculated for a ball with radius
     $R = 0.24$. Image dimensions are  $450 \times 450 \times 450$.]{
-    \includegraphics[width=0.3\linewidth]{images/ball-3d-ss.png}
+    \includegraphics[width=0.45\linewidth]{images/ball-3d-ss.png}
     \label{fig:fss-ball}}
   \hfill
   \subfigure[Surface-void function calculated for a disk with radius
     $R = 0.2$. Image dimensions are $2000 \times 2000$.]{
-    \includegraphics[width=0.3\linewidth]{images/fsv-disk.png}
+    \includegraphics[width=0.45\linewidth]{images/fsv-disk.png}
     \label{fig:fsv-disk}}
-  \hfill
+  \vskip\baselineskip
   \subfigure[Surface-void function calculated for a ball with radius
     $R = 0.2$. Image dimensions are $300 \times 300 \times 300$.]{
-    \includegraphics[width=0.3\linewidth]{images/fsv-ball.png}
+    \includegraphics[width=0.45\linewidth]{images/fsv-ball.png}
     \label{fig:fsv-ball}}
   \caption[]{Comparison of filters $H$ and $H'$ for cases in which newly
     developed algorithms \cref{sec:fss-2d}, \cref{sec:fsss-3d} are not
