@@ -879,34 +879,44 @@ filter $H'$, respectively. Calculation of surface-void function also benefits
 from the new filter (\cref{fig:fsv-disk}, \cref{fig:fsv-ball}).
 
 However, the $H'$ filter has some drawbacks as compared to $H$. Firstly, $H$ has
-faster convergence with increase of image resolution.  Secondly, $H'$ behaves
-worse that $H$ in points of discontinuity of $F_{ss}$ for low resolutions as can
-be seen on \cref{fig:fss-disk}.  To explore such effects we appeal to the
-criterion $C_{0.5}$ \cite{Samarin} developed to determine if an image is
-suitable for robust surface correlation functions assessment. This parameter is
-defined as:
+faster convergence with increase of image resolution. Secondly, $H'$ behaves
+worse than $H$ in points of discontinuity of $F_{ss}$ as can be seen on
+\cref{fig:fss-disk}. To explore such effects we appeal to the parameter
+$C_\alpha$ \cite{Samarin} developed to determine if an image is suitable for
+robust assessment of surface correlation functions. To introduce this parameter,
+consider a continuos band-limited signal $f(t)$ with support in frequency domian
+$[-\omega_0, \omega_0]$. The $L^2$ norm of this signal is
 \begin{equation}
-  C_{0.5} = \frac{\text{Power of the lower half of the image's
-      spectrum}}{\text{Power of the image}}
+  \|f\| = \sqrt{\int_{-\omega_0}^{\omega_0} |\hat{f}(\omega)|^2 d\omega}
 \end{equation}
-In this expression the part of ``Power of the image'' refers to $L^2$ norm of
-the image and ``the lower half of the \dots spectrum'' is the part of the
-spectrum (Fourier image) with frequencies $[-\omega_N/2, \omega_N/2]$ where
-$\omega_N$ is a Nyquist frequency of the image. It's important to firstly
-subtract the zeroth frequency (mean value) from the image before the calculation
-of $C_{0.5}$ is executed. The image is suitable for processing if the acceptance
-criterion $C_{0.5} > 0.97$ holds. This criterion works for both filters $H$ and
-$H'$, but $H$ results in smaller error when $C_{0.5}$ is slightly less than
-0.97. For example, consider images of a disk used for calculation of $F_{ss}$ on
-\cref{fig:fss-disk}. On \cref{fig:error} we provide values of $C_{0.5}$ for this
-image (for variety of resolutions) and relative errors in $F_{ss}$
-(\cref{eq:error}) for both filters. It can be seen that $H$ gives twice the
-lower error than $H'$ when used for an image with $C_{0.5} \approx 0.82$.
-
-In short, for images of acceptable quality the $H'$ filter is superior. Images
-with insufficient resolution benefit from downscaling prior to correlation
-functions evalution \cite{Samarin} (and then again new filter will provide
-better results).
+where $\hat{f}(\omega)$ is a Fourier transform of $f(t)$. The idea behind the
+parameter is to determine how much low-frequency domain contributes to the total
+power of a signal. $C_\alpha$ parameter is defined as
+\begin{equation}
+  \begin{aligned}
+    C_\alpha &= \sqrt{\frac{\int_{-\alpha\omega_0}^{\alpha\omega_0}
+        |\hat{f}(\omega)|^2 d\omega}{\int_{-\omega_0}^{\omega_0}
+        |\hat{f}(\omega)|^2 d\omega}} \\
+    \alpha &\in [0, 1]
+  \end{aligned}
+  \label{eq:parameter}
+\end{equation}
+For two- and three-dimensional discrete images $f(t)$ is replaced with the input
+array $A$ minus its mean, integrals in \cref{eq:parameter} are replaced with
+double and triple sums respectively and $\omega_0$ is equal to the Nyquist
+frequency for the image. Our empirical criterion says that the image is suitable
+for evaluation of surface correlation functions if
+\begin{equation}
+  C_{0.5} > 0.97
+\end{equation}
+This criterion works for both filters $H$ and $H'$, but $H$ results in smaller
+error when $C_{0.5}$ is slightly less than 0.97. For example, consider images of
+a disk used for calculation of $F_{ss}$ on \cref{fig:fss-disk}. On
+\cref{fig:error} we provide values of $C_{0.5}$ for this image (for variety of
+resolutions) and relative errors in $F_{ss}$ (\cref{eq:error}) for both
+filters. It can be seen that $H$ gives twice the lower error than $H'$ when used
+for an image with $C_{0.5} \approx 0.82$. In short, for images of acceptable
+quality the $H'$ filter is superior.
 
 \begin{figure*}[!hpt]
   \centering
