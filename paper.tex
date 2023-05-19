@@ -71,7 +71,7 @@
 Correlation functions (CFs) to describe structures arose from scattering
 experiments \cite{debye1957scattering} and found their way into numerous
 disciplines and applications: from material sciences
-\cite{Cecen,chen2022quantifying}, to rock \cite{ledesma2018effect} and soil
+\cite{Cecen,chen2022}, to rock \cite{ledesma2018effect} and soil
 physics \cite{Euras2012,PLoS_ONE,KarsaninaEJSS}, cosmology \cite{TakadaJain} and
 food engineering \cite{Derossi2019}. In particular, correlation functions as
 computed from structural images were used for:
@@ -79,14 +79,14 @@ computed from structural images were used for:
   \item characterization of morphology \cite{tensorPRE} and representativeness
     via correlation lengths \cite{vcapek2011transport,thovert2011grain} at which
     CFs reach plateau;
-  \item comparison of different structures \cite{jiao2014chawla,EPL1,REVpaper},
+  \item comparison of different structures \cite{10.1063/1.4867611,EPL1,REVpaper},
     usually by computing L-2 norm difference between CFs for two or more images,
   \item compressing structural information \cite{SciRep1,Havelka} by
     representing huge datasets in the form of a limited set of CFs that can be
     further squeezed into parameters for a number of basis functions
     \cite{jiao2007,KarsaninaEJSS},
   \item describing structural dynamics and evolution
-    \cite{chen2015dynamic,PLoS_ONE,xu2022correlation},
+    \cite{PhysRevE.92.023301,PLoS_ONE,xu2022correlation},
   \item extracting features for deep learning
     \cite{Miao2017,kamrava2020linking,roding2020predicting,KarsaninaEJSS},
   \item performing stochastic reconstructions
@@ -139,6 +139,49 @@ The examples above a just a few potential applications that, due to ability for
 surface CFs to establish themselves as universal interface/surface descriptors,
 highlight the necessity to establish robust techniques for $F_{ss}$ and $F_{sv}$
 evaluation.
+
+Heterogeneous materials possess complex microstructures that play a crucial role
+in determining their macroscopic properties. To gain a deeper understanding of
+these materials and accurately estimate their properties, the consideration of
+higher-order correlation functions becomes essential. Several n-point
+correlation functions have been proposed and developed to effectively
+characterize disordered materials, ranging from second-order functions like the
+radial distribution function to higher-order functions involving correlations
+among three or more reference points
+\cite{Jiao_2012,PhysRevB.42.4453,10.1063/1.4865966}.
+
+While certain cases may be adequately addressed by two-point correlation
+functions \cite{LIU2015177,PhysRevE.77.031135}, situations demanding a higher
+degree of accuracy require the higher-order correlations to construct precise
+models. These higher-order correlation functions, although computationally
+demanding and analytically intricate, yield valuable information and estimations
+for various material properties. For instance, the effective diffusion
+coefficient, a crucial transport property, can be approximated by considering a
+three-point microstructural parameter expressed in terms of integrals over the
+three-point probability function \cite{Jiao_2012}. Furthermore, the combination
+of such functions can serve as target functions for reconstructing models of
+disordered materials, enhancing the accuracy of the reconstruction process
+\cite{JIAO20133370,PhysRevE.92.023301,10.1063/1.4867611,chen2016stochastic}.
+
+Analytical approaches have been proposed to compute only n-point functions $S_n$
+\cite{PhysRevB.42.4453,10.1063/1.4865966}. but studying n-point surface
+correlations faces lack of analytical solutions. Availability of analytical
+solutions for correlation functions holds significant importance and serves as a
+desirable benchmark for evaluating and validating numerical algorithms. However,
+a comprehensive computational framework for calculating higher-order correlation
+functions in heterogeneous media is still lacking. In their study
+\cite{malmir2018}, the authors proposed an algorithm for computing third-order
+correlation functions and compared its performance with existing analytical
+solutions and asymptotic cases. Although the algorithm demonstrates good
+performance for the computation of S3 functions, the authors themselves
+acknowledge that there is room for further improvement, particularly in the case
+of surface correlation functions. To address this limitation, they suggest
+employing a method similar to the one used in the work of Ma and Torquato
+\cite{ma2018SS}, where a digitized image is converted into a scalar field. In
+our current study, we advance beyond these findings and significantly enhance
+the numerical solution for the three-point correlation function of surfaces by
+incorporating and developing ideas from the work of Samarin et al
+\cite{Samarin}.
 
 In this contribution we continue to build upon foundational work of Ma and
 Torquato \cite{ma2018SS} and recent findings of Samarin et al. \cite{Samarin} to
@@ -195,7 +238,7 @@ $F_{sv}$ can be replaced with a scalar $r = |\bm{r}|$:
 \end{align}
 In case correlation functions are computed in predefined directions, scalar
 values can be also used for anisotropic structures
-\cite{jiao2014chawla,EPL1}. These functions are defined for media with
+\cite{10.1063/1.4867611,EPL1}. These functions are defined for media with
 dimensionality of 2 and higher. $F_{sv}$ is a physical quantity inversely
 proportional to length and $F_{ss}$ is inversely proportional to surface
 area. SI units of measurement for these functions are $m^{-1}$ for $F_{sv}$
@@ -970,7 +1013,7 @@ with smooth boundary is available on GitHub
 $F_{sss}$ is now part of open source package CorrelationFunctions.jl written in
 Julia \cite{CFs.jl}.
 
-\bibliography{pape}
+\bibliography{paper}
 
 \appendix
 \section{Dual numbers and automatic differentiation}
