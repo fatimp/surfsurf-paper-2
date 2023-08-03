@@ -15,11 +15,11 @@ for side in [100, 500, 1000, 2000, 3000]:
     legend = legend + [str(side)]
 
 xs = np.linspace(0, 0.5, 1000)
-plt.xlim([0, 0.1])
-plt.ylim([0, 6])
+plt.xlim([0.03, 0.06])
+plt.ylim([2.0, 2.4])
 plt.plot(xs, ss(xs, 0.0334), linewidth = 1.8)
 plt.ticklabel_format(axis = "x", scilimits = (0, 0), useMathText = True)
-plt.legend(legend + ['Theory'], loc = 3)
+#plt.legend(legend + ['Theory'])
 plt.xlabel('Correlation length $r$')
 plt.ylabel('$F_{ss}(r)$')
-plt.savefig('../images/fss-disk-7x7.png', bbox_inches = 'tight')
+plt.savefig('../images/fss-disk-7x7-inset.png', bbox_inches = 'tight')

@@ -46,7 +46,7 @@ function do_it!()
     errors = Float64[]
     criteria = Float64[]
 
-    for side in 100:100:3100
+    for side in [100, 500, 1000, 2000, 3000]
         disk = draw_ball((side, side), R*side)
         println(side)
         ss = M.surf2(disk, false; periodic = true, filter = U.ConvKernel(7)) |> M.average_directions
