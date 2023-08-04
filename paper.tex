@@ -53,7 +53,7 @@
   discretization. This allows us to test digital computational approach on
   geometries beyond those available as analytical solutions. Moreover, we
   propose a better edge detection filter that allowed to improve the quality of
-  assessment of surface correlation functions, both surface-surface and
+  assessment of surface correlation functions, both surface-surface ($F_{ss}$) and
   surface-void ($F_{sv}$), for digital images. The code for continuous and
   discrete computational frameworks is freely available and is now the part of
   the more general CorrelationFunctions.jl package.
@@ -103,7 +103,7 @@ In majority, if not all, cases mentioned above, surface functions - namely,
 $F_{ss}$ and $F_{sv}$ - were underrepresented due to our inability to compute
 them in a robust way. While known for a long time \cite{dietrich1995scattering}, only
 somewhat crude approximate approaches \cite{seaton1986spatial} were developed
-until Ma and Torquato laid foundation for such a robust computational
+until Ma and Torquato laid foundation for a robust computational
 methodology \cite{ma2018SS}. They proposed an elegant solution for infinite
 resolution Gaussian random fields, or "continuous" approach. They also assumed
 that the same approach can be readily applied to discrete experimental images if
@@ -112,7 +112,7 @@ field. Samarin et al. \cite{Samarin} argued that experimental images needs
 to be segmented first using current cutting edge techniques \cite{NNseg} and
 proposed "discrete" approach. The latter allowed obtaining surface functions
 closer to analytical solutions for overlapping disks/spheres and to suppress
-perturbation, in particular for $F_{ss}$. The perturbation in Ma and Torquato
+noise, in particular for $F_{ss}$. The noise in Ma and Torquato
 method resulted from $1/cos(\theta)$ computations during random line segment
 placement -- this leaves a room for improvements. While Samarin et al. obtained
 better convergence with analytical solution, this was demonstrated only for
@@ -173,17 +173,15 @@ functions in heterogeneous media is still lacking. In their study
 \cite{malmir2018}, the authors proposed an algorithm for computing third-order
 correlation functions and compared its performance with existing analytical
 solutions and asymptotic cases. Although the algorithm demonstrates good
-performance for the computation of S3 functions, the authors themselves
+performance for the computation of $S_3$ functions, the authors themselves
 acknowledge that there is room for further improvement, particularly in the case
 of surface correlation functions. To address this limitation, they suggest
 employing a method similar to the one used in the work of Ma and Torquato
 \cite{ma2018SS}, where a digitized image is converted into a scalar field. In
 our current study, we advance beyond these findings and significantly enhance
-the numerical solution for the three-point correlation function of surfaces by
-incorporating and developing ideas from the work of Samarin et al
-\cite{Samarin}.
+the numerical solution for the three-point correlation function of surfaces.
 
-In this contribution we continue to build upon foundational work of Ma and
+All in all, we continue to build upon foundational work of Ma and
 Torquato \cite{ma2018SS} and recent findings of Samarin et al. \cite{Samarin} to
 develop a robust and efficient approach to compute surface correlation functions
 from digital 2D and 3D images. In particular, here our aim is to establish a
@@ -238,8 +236,7 @@ $F_{sv}$ can be replaced with a scalar $r = |\bm{r}|$:
 \end{align}
 In case correlation functions are computed in predefined directions, scalar
 values can be also used for anisotropic structures
-\cite{10.1063/1.4867611,EPL1}. These functions are defined for media with
-dimensionality of 2 and higher. $F_{sv}$ is a physical quantity inversely
+\cite{10.1063/1.4867611,EPL1}. $F_{sv}$ is a physical quantity inversely
 proportional to length and $F_{ss}$ is inversely proportional to surface
 area. SI units of measurement for these functions are $m^{-1}$ for $F_{sv}$
 and $m^{-2}$ for $F_{ss}$. In practice non-standard units of measurement can be
@@ -252,9 +249,7 @@ correlation function $F_{sss}$. It is defined as follows:
   M_S(\bm{x} + \bm{r_2}) \rangle
   \label{eq:fsss}
 \end{equation}
-This function is defined for media with dimensionality 3 or higher and is a
-physical quantity inversely proportional to volume. SI units for $F_{sss}$ are
-$m^{-3}$, but relative units can be used in practice. For three-dimensional media
+SI units for $F_{sss}$ are $m^{-3}$, but relative units can be used in practice. For three-dimensional media
 $F_{sss}$ is a function of six scalar arguments:
 $\bm{r_1} = (r_{1x}, r_{1y}, r_{1z})$ and $\bm{r_2} = (r_{2x}, r_{2y}, r_{2z})$.
 However, if the medium under consideration is isotropic, only three scalar
@@ -928,13 +923,13 @@ worse than $H$ in points of discontinuity of $F_{ss}$ as can be seen on
 $C_\alpha$ \cite{Samarin} developed to determine if an image is suitable for
 robust assessment of surface correlation functions. To introduce this parameter,
 consider a continuos band-limited signal $f(t)$ with support in frequency domian
-$[-\omega_0, \omega_0]$. The $L^2$ norm of this signal is
+$[-\omega_0, \omega_0]$. The $L^2$ norm of this signal is:
 \begin{equation}
   \|f\| = \sqrt{\int_{-\omega_0}^{\omega_0} |\hat{f}(\omega)|^2 d\omega}
 \end{equation}
 where $\hat{f}(\omega)$ is a Fourier transform of $f(t)$. The idea behind the
 parameter is to determine how much low-frequency domain contributes to the total
-power of a signal. $C_\alpha$ parameter is defined as
+power of a signal. $C_\alpha$ parameter is defined as:
 \begin{equation}
   \begin{aligned}
     C_\alpha &= \sqrt{\frac{\int_{-\alpha\omega_0}^{\alpha\omega_0}
@@ -948,7 +943,7 @@ For two- and three-dimensional discrete images $f(t)$ is replaced with the input
 array $A$ minus its mean, integrals in \cref{eq:parameter} are replaced with
 double and triple sums respectively and $\omega_0$ is equal to the Nyquist
 frequency for the image. Our empirical criterion says that the image is suitable
-for evaluation of surface correlation functions if
+for evaluation of surface correlation functions if:
 \begin{equation}
   C_{0.5} > 0.97
 \end{equation}
@@ -1012,6 +1007,11 @@ with smooth boundary is available on GitHub
 \cite{diff-boundary-corrfn}. Improved digital approach for both $F_{ss}$ and
 $F_{sss}$ is now part of open source package CorrelationFunctions.jl written in
 Julia \cite{CFs.jl}.
+
+\section{Acknowledgements}
+This research was supported by the Russian Science Foundation grant 23-74-00061. Collaborative effort of the authors is within the FaT iMP 
+(Flow and Transport in Media with Pores) research group (www.porenetwork.com). We thank our colleague Konstantin Romanenko for suggestions 
+and administrative work.
 
 \bibliography{paper}
 
