@@ -349,7 +349,7 @@ of $F_{ss}$ function:
   \Comment{$A'$ becomes an interface of $A$.}
   \State $\hat{A'} \gets F[A']$
   \Comment{Apply DFT to $A'$.}
-  \State \textbf{return} $F^{-1}[ |\hat{A}|^2 / N]$
+  \State \textbf{return} $F^{-1}[ |\hat{A'}|^2 / N]$
   \Comment{$N$ is a number of elements in $A$}
   \EndProcedure
 \end{algorithmic}
@@ -365,7 +365,7 @@ Algorithm for surface-void function $F_{sv}$ computation is similar:
   \Comment{Apply DFT to $A'$.}
   \State $\hat{V} \gets F[V]$
   \Comment{Apply DFT to $V$.}
-  \State \textbf{return} $F^{-1}[ \hat{A}\overline{\hat{V}} / N]$
+  \State \textbf{return} $F^{-1}[ \hat{A'}\overline{\hat{V}} / N]$
   \Comment{$N$ is a number of elements in $A$}
   \EndProcedure
 \end{algorithmic}
